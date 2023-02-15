@@ -1,6 +1,8 @@
 package br.com.leuxam.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -8,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -31,6 +34,9 @@ public class Fornecedor implements Serializable{
 	
 	@Column(nullable = false, length = 45)
 	private String nomeDoContato;
+	
+	@OneToMany(mappedBy = "fornecedor")
+	private List<Compras> compras = new ArrayList<>();
 	
 	public Fornecedor() {}
 

@@ -1,9 +1,9 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/rest_pdv_padaria?useTimezone=true&serverTtimezone=UTC
-    username: root
-    password: maxuelt123
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/rest_pdv_padaria?useTimezone=true&serverTimezone=UTC
+      username: root
+      password: maxuelt123
   jpa:
     hibernate:
       ddl-auto: update

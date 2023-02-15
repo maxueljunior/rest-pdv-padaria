@@ -1,7 +1,9 @@
 package br.com.leuxam.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -9,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -41,6 +44,9 @@ public class Cliente implements Serializable{
 	
 	@Column(nullable = false, length = 1)
 	private String sexo;
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<Vendas> vendas = new ArrayList<>();
 	
 	public Cliente() {}
 
@@ -118,6 +124,10 @@ public class Cliente implements Serializable{
 
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
+	}
+
+	public List<Vendas> getVendas() {
+		return vendas;
 	}
 
 	@Override
