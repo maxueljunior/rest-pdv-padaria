@@ -2,13 +2,18 @@ package br.com.leuxam.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -35,6 +40,12 @@ public class Estoque implements Serializable{
 	
 	@Column(nullable = false, length = 2)
 	private String unidade;
+	
+	@OneToMany(mappedBy = "id.estoque")
+	private Set<VendaEstoque> items = new HashSet<>();
+	
+	@OneToMany(mappedBy = "id.estoque")
+	private Set<CompraEstoque> compras = new HashSet<>();
 	
 	public Estoque() {}
 	
@@ -93,6 +104,24 @@ public class Estoque implements Serializable{
 
 	public void setUnidade(String unidade) {
 		this.unidade = unidade;
+	}
+	
+	@JsonIgnore
+	public Set<Vendas> getVendas(){
+		Set<Vendas> set = new HashSet<>();
+		for(VendaEstoque x : items) {
+			set.add(x.getVendas());
+		}
+		return set;
+	}
+	
+	@JsonIgnore
+	public Set<Compras> getCompras(){
+		Set<Compras> set = new HashSet<>();
+		for (CompraEstoque x : compras) {
+			set.add(x.getCompras());
+		}
+		return set;
 	}
 
 	@Override

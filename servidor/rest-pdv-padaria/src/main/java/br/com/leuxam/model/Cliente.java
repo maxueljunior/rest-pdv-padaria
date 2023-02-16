@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,6 +47,7 @@ public class Cliente implements Serializable{
 	@Column(nullable = false, length = 1)
 	private String sexo;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Vendas> vendas = new ArrayList<>();
 	

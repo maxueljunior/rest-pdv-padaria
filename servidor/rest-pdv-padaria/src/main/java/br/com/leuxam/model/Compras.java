@@ -1,7 +1,9 @@
 package br.com.leuxam.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +31,9 @@ public class Compras implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "fornecedor_id")
 	private Fornecedor fornecedor;
+	
+	@OneToMany(mappedBy = "id.compras")
+	private Set<CompraEstoque> items = new HashSet<>();
 	
 	public Compras() {}
 
@@ -50,6 +56,10 @@ public class Compras implements Serializable{
 
 	public void setValorTotal(Double valorTotal) {
 		this.valorTotal = valorTotal;
+	}
+	
+	public Set<CompraEstoque> getItems(){
+		return items;
 	}
 
 	@Override

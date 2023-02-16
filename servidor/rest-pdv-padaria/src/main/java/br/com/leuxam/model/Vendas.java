@@ -2,7 +2,9 @@ package br.com.leuxam.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import jakarta.persistence.Column;
@@ -12,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -42,6 +45,9 @@ public class Vendas implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
+	
+	@OneToMany(mappedBy = "id.vendas")
+	private Set<VendaEstoque> items = new HashSet<>();
 	
 	public Vendas() {}
 
@@ -112,6 +118,10 @@ public class Vendas implements Serializable{
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+	
+	public Set<VendaEstoque> getItems(){
+		return items;
 	}
 
 	@Override
