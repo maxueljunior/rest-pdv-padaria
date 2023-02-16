@@ -30,7 +30,7 @@ public class Estoque implements Serializable{
 	private String descricao;
 	
 	@Column(nullable = false)
-	private Integer quantidade;
+	private Double quantidade;
 	
 	@Column(nullable = false)
 	private Date dataCompra;
@@ -49,7 +49,7 @@ public class Estoque implements Serializable{
 	
 	public Estoque() {}
 	
-	public Estoque(Long id, String descricao, Integer quantidade, Date dataCompra, Date dataValidade, String unidade) {
+	public Estoque(Long id, String descricao, Double quantidade, Date dataCompra, Date dataValidade, String unidade) {
 		this.id = id;
 		this.descricao = descricao;
 		this.quantidade = quantidade;
@@ -74,11 +74,11 @@ public class Estoque implements Serializable{
 		this.descricao = descricao;
 	}
 
-	public Integer getQuantidade() {
+	public Double getQuantidade() {
 		return quantidade;
 	}
 
-	public void setQuantidade(Integer quantidade) {
+	public void setQuantidade(Double quantidade) {
 		this.quantidade = quantidade;
 	}
 
