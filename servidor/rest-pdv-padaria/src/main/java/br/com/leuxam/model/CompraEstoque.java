@@ -30,8 +30,7 @@ public class CompraEstoque implements Serializable{
 		this.preco = preco;
 		this.quantidade = quantidade;
 	}
-	
-	@JsonIgnore
+
 	public Compras getCompras() {
 		return id.getCompras();
 	}

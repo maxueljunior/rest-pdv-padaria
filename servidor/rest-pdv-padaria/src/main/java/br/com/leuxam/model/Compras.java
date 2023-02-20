@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,9 +39,10 @@ public class Compras implements Serializable{
 	
 	public Compras() {}
 
-	public Compras(Long id, Double valorTotal) {
+	public Compras(Long id, Double valorTotal, Fornecedor fornecedor) {
 		this.id = id;
 		this.valorTotal = valorTotal;
+		this.fornecedor = fornecedor;
 	}
 
 	public Long getId() {
@@ -50,6 +53,14 @@ public class Compras implements Serializable{
 		this.id = id;
 	}
 
+	public Fornecedor getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+
 	public Double getValorTotal() {
 		return valorTotal;
 	}
@@ -58,6 +69,7 @@ public class Compras implements Serializable{
 		this.valorTotal = valorTotal;
 	}
 	
+	@JsonIgnore
 	public Set<CompraEstoque> getItems(){
 		return items;
 	}

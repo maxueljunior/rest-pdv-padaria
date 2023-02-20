@@ -15,7 +15,7 @@ public class ComprasService {
 	@Autowired
 	ComprasRepository repository;
 	
-	public List<Compras> listAll(){
+	public List<Compras> findAll(){
 		return repository.findAll();
 	}
 	
@@ -33,6 +33,7 @@ public class ComprasService {
 		var entity = repository.findById(compra.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("Não existe compras com esse ID"));
 		entity.setValorTotal(compra.getValorTotal());
+		entity.setFornecedor(compra.getFornecedor());
 		return repository.save(entity);
 	}
 	
