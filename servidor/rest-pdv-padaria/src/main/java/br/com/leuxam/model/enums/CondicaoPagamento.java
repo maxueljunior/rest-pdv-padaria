@@ -5,7 +5,8 @@ public enum CondicaoPagamento {
 	PIX(1),
 	CREDITO(2),
 	DEBITO(3),
-	DINHEIRO(4);
+	DINHEIRO(4),
+	NULL(5);
 	
 	private int code;
 	

@@ -29,13 +29,10 @@ public class Vendas implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false)
 	private Date dataVenda;
 	
-	@Column(nullable = false)
 	private Double valorTotal;
 	
-	@Column(nullable = false)
 	private Integer condicaoPagamento;
 	
 	@ManyToOne
