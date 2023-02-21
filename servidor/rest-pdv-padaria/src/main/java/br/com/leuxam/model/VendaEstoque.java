@@ -31,7 +31,6 @@ public class VendaEstoque implements Serializable{
 		this.preco = preco;
 	}
 	
-	@JsonIgnore
 	public Vendas getVendas() {
 		return id.getVendas();
 	}

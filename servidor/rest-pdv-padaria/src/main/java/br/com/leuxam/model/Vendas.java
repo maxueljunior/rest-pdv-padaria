@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -95,6 +97,7 @@ public class Vendas implements Serializable{
 		this.cliente = cliente;
 	}
 	
+	@JsonIgnore
 	public Set<VendaEstoque> getItems(){
 		return items;
 	}
