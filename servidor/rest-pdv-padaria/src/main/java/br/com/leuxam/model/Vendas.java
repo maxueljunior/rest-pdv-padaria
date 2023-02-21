@@ -31,13 +31,7 @@ public class Vendas implements Serializable{
 	private Date dataVenda;
 	
 	@Column(nullable = false)
-	private Double valorUnitario;
-	
-	@Column(nullable = false)
 	private Double valorTotal;
-	
-	@Column(nullable = false)
-	private Double quantidade;
 	
 	@Column(nullable = false)
 	private Integer condicaoPagamento;
@@ -51,13 +45,10 @@ public class Vendas implements Serializable{
 	
 	public Vendas() {}
 
-	public Vendas(Long id, Date dataVenda, Double valorUnitario, Double valorTotal, Double quantidade,
-			CondicaoPagamento condicaoPagamento, Cliente cliente) {
+	public Vendas(Long id, Date dataVenda, Double valorTotal, CondicaoPagamento condicaoPagamento, Cliente cliente) {
 		this.id = id;
 		this.dataVenda = dataVenda;
-		this.valorUnitario = valorUnitario;
 		this.valorTotal = valorTotal;
-		this.quantidade = quantidade;
 		setCondicaoPagamento(condicaoPagamento);
 		this.cliente = cliente;
 	}
@@ -80,16 +71,8 @@ public class Vendas implements Serializable{
 		return dataVenda;
 	}
 
-	public Double getValorUnitario() {
-		return valorUnitario;
-	}
-
 	public Double getValorTotal() {
 		return valorTotal;
-	}
-
-	public Double getQuantidade() {
-		return quantidade;
 	}
 
 	public Cliente getCliente() {
@@ -104,16 +87,8 @@ public class Vendas implements Serializable{
 		this.dataVenda = dataVenda;
 	}
 
-	public void setValorUnitario(Double valorUnitario) {
-		this.valorUnitario = valorUnitario;
-	}
-
 	public void setValorTotal(Double valorTotal) {
 		this.valorTotal = valorTotal;
-	}
-
-	public void setQuantidade(Double quantidade) {
-		this.quantidade = quantidade;
 	}
 
 	public void setCliente(Cliente cliente) {
@@ -126,7 +101,7 @@ public class Vendas implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cliente, condicaoPagamento, dataVenda, id, quantidade, valorTotal, valorUnitario);
+		return Objects.hash(cliente, condicaoPagamento, dataVenda, id, items, valorTotal);
 	}
 
 	@Override
@@ -140,7 +115,6 @@ public class Vendas implements Serializable{
 		Vendas other = (Vendas) obj;
 		return Objects.equals(cliente, other.cliente) && Objects.equals(condicaoPagamento, other.condicaoPagamento)
 				&& Objects.equals(dataVenda, other.dataVenda) && Objects.equals(id, other.id)
-				&& Objects.equals(quantidade, other.quantidade) && Objects.equals(valorTotal, other.valorTotal)
-				&& Objects.equals(valorUnitario, other.valorUnitario);
+				&& Objects.equals(items, other.items) && Objects.equals(valorTotal, other.valorTotal);
 	}
 }
