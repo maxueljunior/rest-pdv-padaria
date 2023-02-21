@@ -5,12 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.leuxam.model.Estoque;
 import br.com.leuxam.model.VendaEstoque;
 import br.com.leuxam.services.VendasEstoqueService;
 
@@ -31,9 +32,9 @@ public class VendaEstoqueController {
 		return service.create(vendaEstoque);
 	}
 	
-	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public VendaEstoque update(@RequestBody VendaEstoque vendaEstoque, @RequestBody Long id){
-		return service.update(vendaEstoque, id);
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<VendaEstoque> findAllWithProdutcs(@PathVariable(value = "id") Long id){
+		return service.findAllWithProdutcs(id);
 	}
 	
 }
