@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.model.Vendas;
 import br.com.leuxam.repositories.VendasRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class VendasService {
@@ -44,5 +45,4 @@ public class VendasService {
 				.orElseThrow(() -> new ResourceNotFoundException("Não existe venda com esse ID"));
 		repository.delete(entity);
 	}
-	
 }

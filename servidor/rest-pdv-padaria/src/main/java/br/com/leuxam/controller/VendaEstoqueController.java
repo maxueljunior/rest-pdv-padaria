@@ -4,14 +4,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.leuxam.model.Estoque;
 import br.com.leuxam.model.VendaEstoque;
 import br.com.leuxam.services.VendasEstoqueService;
 
@@ -32,9 +33,24 @@ public class VendaEstoqueController {
 		return service.create(vendaEstoque);
 	}
 	
-	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<VendaEstoque> findAllWithProdutcs(@PathVariable(value = "id") Long id){
-		return service.findAllWithProdutcs(id);
+	@GetMapping(value = "/relatorio", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<VendaEstoque> findAllWithProducts(
+			@RequestParam(value = "id", defaultValue = "1") Long id,
+			@RequestParam(value = "table", defaultValue = "produto") String table){
+		
+		if("produto".equalsIgnoreCase(table)) {
+			return service.findAllWithProdutcs(id);
+		}else {
+			return service.findAllWithVendas(id);
+		}
 	}
 	
+	@PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updateProductsWithVendas(
+			@RequestParam(value = "productAnt", defaultValue = "0") Long idProdutoAntigo,
+			@RequestParam(value = "order", defaultValue = "0") Long idVendas,
+			@RequestParam(value = "productNew", defaultValue = "0") Long idProdutoNovo){
+		service.updateProdutoWithVendas(idProdutoAntigo, idVendas, idProdutoNovo);
+		return ResponseEntity.ok().build();
+	}
 }
