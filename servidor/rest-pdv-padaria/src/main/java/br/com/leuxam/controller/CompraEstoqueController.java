@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.leuxam.model.CompraEstoque;
@@ -34,6 +35,17 @@ public class CompraEstoqueController {
 		return service.findAll();
 	}
 	
+	@GetMapping(value = "/relatorio", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<CompraEstoque> findAllWithProdutoOrCompra(
+			@RequestParam(value = "id", defaultValue = "1") Long id,
+			@RequestParam(value = "table", defaultValue = "produto") String table){
+		if("produto".equalsIgnoreCase(table)) {
+			return service.findAllWithProduto(id);
+		}else {
+			return service.findAllWithCompra(id);
+		}
+	}
+	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public CompraEstoque create(@RequestBody CompraEstoque compraEstoque) {
 		return service.create(compraEstoque);
@@ -44,9 +56,11 @@ public class CompraEstoqueController {
 		return service.update(compraEstoque);
 	}
 	
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> delete(@PathVariable(value = "id") Long id){
-		service.delete(id);
+	@DeleteMapping()
+	public ResponseEntity<?> delete(
+			@RequestParam(value = "product", defaultValue = "0") Long idProduto,
+			@RequestParam(value = "purchase", defaultValue = "0") Long idCompra){
+		service.delete(idProduto, idCompra);
 		return ResponseEntity.noContent().build();
 	}
 }

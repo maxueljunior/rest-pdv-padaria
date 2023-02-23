@@ -1,4 +1,4 @@
-package br.com.leuxam.model;
+package br.com.leuxam.data.vo.v1;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -9,41 +9,21 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.leuxam.model.enums.CondicaoPagamento;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "vendas")
-public class Vendas implements Serializable{
+public class VendasVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
 	private Date dataVenda;
-	
 	private Double valorTotal;
-	
 	private Integer condicaoPagamento;
+	private ClienteVO cliente;
+	private Set<VendaEstoqueVO> items = new HashSet<>();
 	
-	@ManyToOne
-	@JoinColumn(name = "cliente_id")
-	private Cliente cliente;
-	
-	@OneToMany(mappedBy = "id.vendas")
-	private Set<VendaEstoque> items = new HashSet<>();
-	
-	public Vendas() {}
+	public VendasVO() {}
 
-	public Vendas(Long id, Date dataVenda, Double valorTotal, CondicaoPagamento condicaoPagamento, Cliente cliente) {
+	public VendasVO(Long id, Date dataVenda, Double valorTotal, CondicaoPagamento condicaoPagamento, ClienteVO cliente) {
 		this.id = id;
 		this.dataVenda = dataVenda;
 		this.valorTotal = valorTotal;
@@ -73,7 +53,7 @@ public class Vendas implements Serializable{
 		return valorTotal;
 	}
 
-	public Cliente getCliente() {
+	public ClienteVO getCliente() {
 		return cliente;
 	}
 
@@ -89,12 +69,12 @@ public class Vendas implements Serializable{
 		this.valorTotal = valorTotal;
 	}
 
-	public void setCliente(Cliente cliente) {
+	public void setCliente(ClienteVO cliente) {
 		this.cliente = cliente;
 	}
 	
 	@JsonIgnore
-	public Set<VendaEstoque> getItems(){
+	public Set<VendaEstoqueVO> getItems(){
 		return items;
 	}
 
@@ -111,7 +91,7 @@ public class Vendas implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Vendas other = (Vendas) obj;
+		VendasVO other = (VendasVO) obj;
 		return Objects.equals(cliente, other.cliente) && Objects.equals(condicaoPagamento, other.condicaoPagamento)
 				&& Objects.equals(dataVenda, other.dataVenda) && Objects.equals(id, other.id)
 				&& Objects.equals(items, other.items) && Objects.equals(valorTotal, other.valorTotal);

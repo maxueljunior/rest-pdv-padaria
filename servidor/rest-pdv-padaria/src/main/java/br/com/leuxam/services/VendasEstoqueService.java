@@ -9,7 +9,6 @@ import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.model.VendaEstoque;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import br.com.leuxam.repositories.VendasEstoqueRepository;
-import jakarta.transaction.Transactional;
 
 @Service
 public class VendasEstoqueService {

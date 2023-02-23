@@ -1,47 +1,40 @@
-package br.com.leuxam.model;
+package br.com.leuxam.data.vo.v1;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-import br.com.leuxam.model.pk.CompraEstoquePK;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import br.com.leuxam.data.pk.vo.v1.CompraEstoquePKVO;
 
-@Entity
-@Table(name = "tb_compra_estoque")
-public class CompraEstoque implements Serializable{
+public class CompraEstoqueVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@EmbeddedId
-	private CompraEstoquePK id = new CompraEstoquePK();
-	
+	private CompraEstoquePKVO id = new CompraEstoquePKVO();
 	private Double preco;
 	private Double quantidade;
 	
-	public CompraEstoque() {}
+	public CompraEstoqueVO() {}
 	
-	public CompraEstoque(Compras compra, Estoque estoque, Double preco, Double quantidade) {
+	public CompraEstoqueVO(ComprasVO compra, EstoqueVO estoque, Double preco, Double quantidade) {
 		id.setCompras(compra);
 		id.setEstoque(estoque);
 		this.preco = preco;
 		this.quantidade = quantidade;
 	}
 
-	public Compras getCompras() {
+	public ComprasVO getCompras() {
 		return id.getCompras();
 	}
 	
-	public void setCompras(Compras compra) {
+	public void setCompras(ComprasVO compra) {
 		id.setCompras(compra);
 	}
 	
-	public Estoque getEstoque() {
+	public EstoqueVO getEstoque() {
 		return id.getEstoque();
 	}
 	
-	public void setEstoque(Estoque estoque) {
+	public void setEstoque(EstoqueVO estoque) {
 		id.setEstoque(estoque);
 	}
 
@@ -71,7 +64,7 @@ public class CompraEstoque implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CompraEstoque other = (CompraEstoque) obj;
+		CompraEstoqueVO other = (CompraEstoqueVO) obj;
 		return Objects.equals(id, other.id);
 	}
 }
