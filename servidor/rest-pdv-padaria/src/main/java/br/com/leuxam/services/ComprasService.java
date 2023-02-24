@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.leuxam.data.vo.v1.ComprasVO;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
-import br.com.leuxam.model.Compras;
 import br.com.leuxam.repositories.ComprasRepository;
 
 @Service
@@ -15,21 +15,21 @@ public class ComprasService {
 	@Autowired
 	ComprasRepository repository;
 	
-	public List<Compras> findAll(){
+	public List<ComprasVO> findAll(){
 		return repository.findAll();
 	}
 	
-	public Compras findById(Long id) {
+	public ComprasVO findById(Long id) {
 		var entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Não existe compras com esse ID"));
 		return entity;
 	}
 	
-	public Compras create(Compras compra) {
+	public ComprasVO create(ComprasVO compra) {
 		return repository.save(compra);
 	}
 	
-	public Compras update(Compras compra) {
+	public ComprasVO update(ComprasVO compra) {
 		var entity = repository.findById(compra.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("Não existe compras com esse ID"));
 		entity.setValorTotal(compra.getValorTotal());

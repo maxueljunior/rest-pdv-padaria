@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.leuxam.model.CompraEstoque;
+import br.com.leuxam.data.vo.v1.CompraEstoqueVO;
 import br.com.leuxam.services.CompraEstoqueService;
 
 @RestController
@@ -26,17 +26,17 @@ public class CompraEstoqueController {
 	private CompraEstoqueService service;
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public CompraEstoque findById(@PathVariable(value = "id") Long id) {
+	public CompraEstoqueVO findById(@PathVariable(value = "id") Long id) {
 		return service.findById(id);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<CompraEstoque> findAll(){
+	public List<CompraEstoqueVO> findAll(){
 		return service.findAll();
 	}
 	
 	@GetMapping(value = "/relatorio", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<CompraEstoque> findAllWithProdutoOrCompra(
+	public List<CompraEstoqueVO> findAllWithProdutoOrCompra(
 			@RequestParam(value = "id", defaultValue = "1") Long id,
 			@RequestParam(value = "table", defaultValue = "produto") String table){
 		if("produto".equalsIgnoreCase(table)) {
@@ -47,12 +47,12 @@ public class CompraEstoqueController {
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public CompraEstoque create(@RequestBody CompraEstoque compraEstoque) {
+	public CompraEstoqueVO create(@RequestBody CompraEstoqueVO compraEstoque) {
 		return service.create(compraEstoque);
 	}
 	
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public CompraEstoque update(@RequestBody CompraEstoque compraEstoque) {
+	public CompraEstoqueVO update(@RequestBody CompraEstoqueVO compraEstoque) {
 		return service.update(compraEstoque);
 	}
 	

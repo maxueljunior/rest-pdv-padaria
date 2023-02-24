@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.leuxam.model.VendaEstoque;
+import br.com.leuxam.data.vo.v1.VendaEstoqueVO;
 import br.com.leuxam.services.VendasEstoqueService;
 
 @RestController
@@ -25,17 +25,17 @@ public class VendaEstoqueController {
 	private VendasEstoqueService service;
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<VendaEstoque> findAll(){
+	public List<VendaEstoqueVO> findAll(){
 		return service.findAll();
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public VendaEstoque create(@RequestBody VendaEstoque vendaEstoque) {
+	public VendaEstoqueVO create(@RequestBody VendaEstoqueVO vendaEstoque) {
 		return service.create(vendaEstoque);
 	}
 	
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public VendaEstoque update(@RequestBody VendaEstoque vendaEstoque) {
+	public VendaEstoqueVO update(@RequestBody VendaEstoqueVO vendaEstoque) {
 		return service.updateByIdProductAndVendas(vendaEstoque);
 	}
 	
@@ -48,7 +48,7 @@ public class VendaEstoqueController {
 	}
 	
 	@GetMapping(value = "/relatorio", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<VendaEstoque> findAllWithProdutoOrVendas(
+	public List<VendaEstoqueVO> findAllWithProdutoOrVendas(
 			@RequestParam(value = "id", defaultValue = "1") Long id,
 			@RequestParam(value = "table", defaultValue = "produto") String table){
 		

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.leuxam.model.Estoque;
+import br.com.leuxam.data.vo.v1.EstoqueVO;
 import br.com.leuxam.services.EstoqueService;
 
 @RestController
@@ -25,22 +25,22 @@ public class EstoqueController {
 	private EstoqueService service;
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Estoque findById(@PathVariable(value = "id") Long id){
+	public EstoqueVO findById(@PathVariable(value = "id") Long id){
 		return service.findById(id);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Estoque> findAll(){
+	public List<EstoqueVO> findAll(){
 		return service.findAll();
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Estoque create(@RequestBody Estoque estoque) {
+	public EstoqueVO create(@RequestBody EstoqueVO estoque) {
 		return service.create(estoque);
 	}
 	
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Estoque update(@RequestBody Estoque estoque) {
+	public EstoqueVO update(@RequestBody EstoqueVO estoque) {
 		return service.update(estoque);
 	}
 	

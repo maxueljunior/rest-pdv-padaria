@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.leuxam.data.vo.v1.ClienteVO;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
-import br.com.leuxam.model.Cliente;
 import br.com.leuxam.repositories.ClienteRepository;
 
 @Service
@@ -15,22 +15,22 @@ public class ClienteServices {
 	@Autowired
 	ClienteRepository repository;
 	
-	public List<Cliente> findAll(){
+	public List<ClienteVO> findAll(){
 		return repository.findAll();
 	}
 	
-	public Cliente findById(Long id) {
+	public ClienteVO findById(Long id) {
 		var entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Não tem nenhum cliente com esse ID"));
 		return entity;
 	}
 	
-	public Cliente create(Cliente cliente) {
+	public ClienteVO create(ClienteVO cliente) {
 		var entity = repository.save(cliente);
 		return entity;
 	}
 	
-	public Cliente update(Cliente cliente) {
+	public ClienteVO update(ClienteVO cliente) {
 		var entity = repository.findById(cliente.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("Não tem nenhum cliente com esse ID"));
 		entity.setDataNascimento(cliente.getDataNascimento());

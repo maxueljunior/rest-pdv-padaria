@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.leuxam.model.Cliente;
+import br.com.leuxam.data.vo.v1.ClienteVO;
 import br.com.leuxam.services.ClienteServices;
 
 @RestController
@@ -25,22 +25,22 @@ public class ClienteController {
 	private ClienteServices service;
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Cliente findById(@PathVariable(value="id") Long id) {
+	public ClienteVO findById(@PathVariable(value="id") Long id) {
 		return service.findById(id);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Cliente> findAll(){
+	public List<ClienteVO> findAll(){
 		return service.findAll();
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Cliente create(@RequestBody Cliente cliente) {
+	public ClienteVO create(@RequestBody ClienteVO cliente) {
 		return service.create(cliente);
 	}
 	
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Cliente update(@RequestBody Cliente cliente) {
+	public ClienteVO update(@RequestBody ClienteVO cliente) {
 		return service.update(cliente);
 	}
 	

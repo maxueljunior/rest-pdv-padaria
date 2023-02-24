@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.leuxam.model.Fornecedor;
+import br.com.leuxam.data.vo.v1.FornecedorVO;
 import br.com.leuxam.services.FornecedorService;
 
 @RestController
@@ -25,22 +25,22 @@ public class FornecedorController {
 	private FornecedorService service;
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Fornecedor findById(@PathVariable(value = "id") Long id) {
+	public FornecedorVO findById(@PathVariable(value = "id") Long id) {
 		return service.findById(id);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Fornecedor> findAll(){
+	public List<FornecedorVO> findAll(){
 		return service.findAll();
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Fornecedor create(@RequestBody Fornecedor fornecedor) {
+	public FornecedorVO create(@RequestBody FornecedorVO fornecedor) {
 		return service.create(fornecedor);
 	}
 	
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Fornecedor update(@RequestBody Fornecedor fornecedor) {
+	public FornecedorVO update(@RequestBody FornecedorVO fornecedor) {
 		return service.update(fornecedor);
 	}
 	

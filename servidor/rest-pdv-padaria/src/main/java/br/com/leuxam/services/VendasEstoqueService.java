@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.leuxam.data.vo.v1.VendaEstoqueVO;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
-import br.com.leuxam.model.VendaEstoque;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import br.com.leuxam.repositories.VendasEstoqueRepository;
 
@@ -16,24 +16,24 @@ public class VendasEstoqueService {
 	@Autowired
 	VendasEstoqueRepository repository;
 	
-	public List<VendaEstoque> findAll(){
+	public List<VendaEstoqueVO> findAll(){
 		return repository.findAll();
 	}
 	
-	public VendaEstoque create(VendaEstoque vendaEstoque) {
+	public VendaEstoqueVO create(VendaEstoqueVO vendaEstoque) {
 		vendaEstoque.getVendas().setCondicaoPagamento(CondicaoPagamento.NULL);
 		return repository.save(vendaEstoque);
 	}
 	
-	public List<VendaEstoque> findAllWithProdutcs(Long id){
+	public List<VendaEstoqueVO> findAllWithProdutcs(Long id){
 		return repository.findAllWithProducts(id);
 	}
 	
-	public List<VendaEstoque> findAllWithVendas(Long id){
+	public List<VendaEstoqueVO> findAllWithVendas(Long id){
 		return repository.findAllWithVendas(id);
 	}
 	
-	public VendaEstoque updateByIdProductAndVendas(VendaEstoque vendaEstoque) {
+	public VendaEstoqueVO updateByIdProductAndVendas(VendaEstoqueVO vendaEstoque) {
 		var entity = repository.findByIdProductAndVendas(vendaEstoque.getEstoque().getId(), vendaEstoque.getVendas().getId());
 		if(entity == null) {
 			throw new ResourceNotFoundException("Não encontrado o relatório com os ID's informados");

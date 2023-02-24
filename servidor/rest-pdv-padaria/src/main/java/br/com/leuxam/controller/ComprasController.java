@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.leuxam.model.Compras;
+import br.com.leuxam.data.vo.v1.ComprasVO;
 import br.com.leuxam.services.ComprasService;
 
 @RestController
@@ -25,22 +25,22 @@ public class ComprasController {
 	private ComprasService service;
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Compras findById(@PathVariable(value = "id") Long id) {
+	public ComprasVO findById(@PathVariable(value = "id") Long id) {
 		return service.findById(id);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Compras> findAll(){
+	public List<ComprasVO> findAll(){
 		return service.findAll();
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Compras create(@RequestBody Compras compra) {
+	public ComprasVO create(@RequestBody ComprasVO compra) {
 		return service.create(compra);
 	}
 	
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Compras update(@RequestBody Compras compra) {
+	public ComprasVO update(@RequestBody ComprasVO compra) {
 		return service.update(compra);
 	}
 	
