@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.dozermapper.core.Mapping;
+
 public class FornecedorVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
-	private Long id;
+
+	@Mapping("id")
+	private Long key;
 	private String razaoSocial;
 	private String cnpj;
 	private String telefone;
@@ -18,20 +22,20 @@ public class FornecedorVO implements Serializable{
 	
 	public FornecedorVO() {}
 
-	public FornecedorVO(Long id, String razaoSocial, String cnpj, String telefone, String nomeDoContato) {
-		this.id = id;
+	public FornecedorVO(Long key, String razaoSocial, String cnpj, String telefone, String nomeDoContato) {
+		this.key = key;
 		this.razaoSocial = razaoSocial;
 		this.cnpj = cnpj;
 		this.telefone = telefone;
 		this.nomeDoContato = nomeDoContato;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getKey() {
+		return key;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setKey(Long key) {
+		this.key = key;
 	}
 
 	public String getRazaoSocial() {
@@ -65,10 +69,15 @@ public class FornecedorVO implements Serializable{
 	public void setNomeDoContato(String nomeDoContato) {
 		this.nomeDoContato = nomeDoContato;
 	}
+	
+	@JsonIgnore
+	public List<ComprasVO> getCompras() {
+		return compras;
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cnpj, id, nomeDoContato, razaoSocial, telefone);
+		return Objects.hash(cnpj, key, nomeDoContato, razaoSocial, telefone);
 	}
 
 	@Override
@@ -80,7 +89,7 @@ public class FornecedorVO implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		FornecedorVO other = (FornecedorVO) obj;
-		return Objects.equals(cnpj, other.cnpj) && Objects.equals(id, other.id)
+		return Objects.equals(cnpj, other.cnpj) && Objects.equals(key, other.key)
 				&& Objects.equals(nomeDoContato, other.nomeDoContato) && Objects.equals(razaoSocial, other.razaoSocial)
 				&& Objects.equals(telefone, other.telefone);
 	}

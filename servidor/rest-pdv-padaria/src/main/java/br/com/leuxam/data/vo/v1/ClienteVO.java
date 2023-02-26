@@ -6,11 +6,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.dozermapper.core.Mapping;
+
 public class ClienteVO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Long id;
+	@Mapping("id")
+	private Long key;
 	private String nome;
 	private String sobrenome;
 	private String telefone;
@@ -18,13 +22,15 @@ public class ClienteVO implements Serializable{
 	private String endereco;
 	private Double lucratividade;
 	private String sexo;
+	
+	@JsonIgnore
 	private List<VendasVO> vendas = new ArrayList<>();
 	
 	public ClienteVO() {}
 
-	public ClienteVO(Long id, String nome, String sobrenome, String telefone, Date dataNascimento, String endereco,
+	public ClienteVO(Long key, String nome, String sobrenome, String telefone, Date dataNascimento, String endereco,
 			Double lucratividade, String sexo) {
-		this.id = id;
+		this.key = key;
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.telefone = telefone;
@@ -34,12 +40,12 @@ public class ClienteVO implements Serializable{
 		this.sexo = sexo;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getKey() {
+		return key;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setKey(Long key) {
+		this.key = key;
 	}
 
 	public String getNome() {
@@ -104,7 +110,7 @@ public class ClienteVO implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(dataNascimento, endereco, id, lucratividade, nome, sexo, sobrenome, telefone);
+		return Objects.hash(dataNascimento, endereco, key, lucratividade, nome, sexo, sobrenome, telefone);
 	}
 
 	@Override
@@ -117,7 +123,7 @@ public class ClienteVO implements Serializable{
 			return false;
 		ClienteVO other = (ClienteVO) obj;
 		return Objects.equals(dataNascimento, other.dataNascimento) && Objects.equals(endereco, other.endereco)
-				&& Objects.equals(id, other.id) && Objects.equals(lucratividade, other.lucratividade)
+				&& Objects.equals(key, other.key) && Objects.equals(lucratividade, other.lucratividade)
 				&& Objects.equals(nome, other.nome) && Objects.equals(sexo, other.sexo)
 				&& Objects.equals(sobrenome, other.sobrenome) && Objects.equals(telefone, other.telefone);
 	}

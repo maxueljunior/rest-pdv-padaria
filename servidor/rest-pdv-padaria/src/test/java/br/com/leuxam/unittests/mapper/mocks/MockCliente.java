@@ -34,7 +34,7 @@ public class MockCliente {
 		ClienteVO cliente = new ClienteVO();
 		cliente.setDataNascimento(new Date());
 		cliente.setEndereco("Endereço" + number);
-		cliente.setId(number.longValue());
+		cliente.setKey(number.longValue());
 		cliente.setLucratividade(number.doubleValue());
 		cliente.setNome("Nome" + number);
 		cliente.setSexo(((number % 2) == 0 ? "M" : "F"));

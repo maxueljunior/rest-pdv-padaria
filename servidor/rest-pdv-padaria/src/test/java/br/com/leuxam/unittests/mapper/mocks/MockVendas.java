@@ -37,7 +37,7 @@ public class MockVendas {
 		vendas.setCliente(cliente);
 		vendas.setCondicaoPagamento(CondicaoPagamento.PIX);
 		vendas.setDataVenda(new Date());
-		vendas.setId(number.longValue());
+		vendas.setKey(number.longValue());
 		vendas.setValorTotal(number.doubleValue());
 		return vendas;
 	}

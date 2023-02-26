@@ -3,39 +3,42 @@ package br.com.leuxam.data.vo.v1;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.github.dozermapper.core.Mapping;
+
 import br.com.leuxam.data.pk.vo.v1.VendaEstoquePKVO;
 
 public class VendaEstoqueVO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	
-	private VendaEstoquePKVO id = new VendaEstoquePKVO();
+
+	@Mapping("id")
+	private VendaEstoquePKVO key = new VendaEstoquePKVO();
 	private Double quantidade;
 	private Double preco;
 	
 	public VendaEstoqueVO() {}
 
 	public VendaEstoqueVO(VendasVO venda, EstoqueVO estoque, Double quantidade, Double preco) {
-		id.setVendas(venda);
-		id.setEstoque(estoque);
+		key.setVendas(venda);
+		key.setEstoque(estoque);
 		this.quantidade = quantidade;
 		this.preco = preco;
 	}
 	
 	public VendasVO getVendas() {
-		return id.getVendas();
+		return key.getVendas();
 	}
 	
 	public void setVendas(VendasVO venda) {
-		id.setVendas(venda);
+		key.setVendas(venda);
 	}
 	
 	public EstoqueVO getEstoque() {
-		return id.getEstoque();
+		return key.getEstoque();
 	}
 	
 	public void setEstoque(EstoqueVO estoque) {
-		id.setEstoque(estoque);
+		key.setEstoque(estoque);
 	}
 
 	public Double getQuantidade() {
@@ -56,7 +59,7 @@ public class VendaEstoqueVO implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(key);
 	}
 
 	@Override
@@ -68,6 +71,6 @@ public class VendaEstoqueVO implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		VendaEstoqueVO other = (VendaEstoqueVO) obj;
-		return Objects.equals(id, other.id);
+		return Objects.equals(key, other.key);
 	}
 }

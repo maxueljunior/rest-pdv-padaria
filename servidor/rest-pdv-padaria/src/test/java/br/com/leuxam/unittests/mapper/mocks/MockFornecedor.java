@@ -29,7 +29,7 @@ public class MockFornecedor {
 	public FornecedorVO mockVO(Integer number) {
 		FornecedorVO fornecedor = new FornecedorVO();
 		fornecedor.setCnpj("CNPJ"+number);
-		fornecedor.setId(number.longValue());
+		fornecedor.setKey(number.longValue());
 		fornecedor.setNomeDoContato("Contato"+number);
 		fornecedor.setRazaoSocial("Razao"+number);
 		fornecedor.setTelefone("Telefone"+number);

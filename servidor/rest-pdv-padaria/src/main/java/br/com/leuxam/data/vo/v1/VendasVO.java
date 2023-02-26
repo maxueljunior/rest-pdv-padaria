@@ -7,14 +7,16 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.dozermapper.core.Mapping;
 
 import br.com.leuxam.model.enums.CondicaoPagamento;
 
 public class VendasVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
-	private Long id;
+
+	@Mapping("id")
+	private Long key;
 	private Date dataVenda;
 	private Double valorTotal;
 	private Integer condicaoPagamento;
@@ -23,8 +25,8 @@ public class VendasVO implements Serializable{
 	
 	public VendasVO() {}
 
-	public VendasVO(Long id, Date dataVenda, Double valorTotal, CondicaoPagamento condicaoPagamento, ClienteVO cliente) {
-		this.id = id;
+	public VendasVO(Long key, Date dataVenda, Double valorTotal, CondicaoPagamento condicaoPagamento, ClienteVO cliente) {
+		this.key = key;
 		this.dataVenda = dataVenda;
 		this.valorTotal = valorTotal;
 		setCondicaoPagamento(condicaoPagamento);
@@ -41,8 +43,8 @@ public class VendasVO implements Serializable{
 		}
 	}
 
-	public Long getId() {
-		return id;
+	public Long getKey() {
+		return key;
 	}
 
 	public Date getDataVenda() {
@@ -57,8 +59,8 @@ public class VendasVO implements Serializable{
 		return cliente;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setKey(Long key) {
+		this.key = key;
 	}
 
 	public void setDataVenda(Date dataVenda) {
@@ -80,7 +82,7 @@ public class VendasVO implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cliente, condicaoPagamento, dataVenda, id, items, valorTotal);
+		return Objects.hash(cliente, condicaoPagamento, dataVenda, key, items, valorTotal);
 	}
 
 	@Override
@@ -93,7 +95,7 @@ public class VendasVO implements Serializable{
 			return false;
 		VendasVO other = (VendasVO) obj;
 		return Objects.equals(cliente, other.cliente) && Objects.equals(condicaoPagamento, other.condicaoPagamento)
-				&& Objects.equals(dataVenda, other.dataVenda) && Objects.equals(id, other.id)
+				&& Objects.equals(dataVenda, other.dataVenda) && Objects.equals(key, other.key)
 				&& Objects.equals(items, other.items) && Objects.equals(valorTotal, other.valorTotal);
 	}
 }

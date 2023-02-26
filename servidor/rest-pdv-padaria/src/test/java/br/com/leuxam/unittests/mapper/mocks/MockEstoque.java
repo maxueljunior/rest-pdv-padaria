@@ -33,7 +33,7 @@ public class MockEstoque {
 		estoque.setDataCompra(new Date());
 		estoque.setDataValidade(new Date());
 		estoque.setDescricao("Descricao"+number);
-		estoque.setId(number.longValue());
+		estoque.setKey(number.longValue());
 		estoque.setQuantidade(number.doubleValue());
 		estoque.setUnidade((number % 2) == 0 ? "UN" : "KG");
 		return estoque;

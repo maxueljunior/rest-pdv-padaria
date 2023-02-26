@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.leuxam.data.vo.v1.VendasVO;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
+import br.com.leuxam.mapper.DozerMapper;
+import br.com.leuxam.model.Vendas;
+import br.com.leuxam.model.enums.CondicaoPagamento;
 import br.com.leuxam.repositories.VendasRepository;
 
 @Service
@@ -18,25 +21,30 @@ public class VendasService {
 	public VendasVO findById(Long id) {
 		var entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Não existe venda com esse ID"));
-		return entity;
+		return DozerMapper.parseObject(entity, VendasVO.class);
 	}
 	
 	public List<VendasVO> findAll(){
-		return repository.findAll();
+		return DozerMapper.parseListObjects(repository.findAll(), VendasVO.class);
 	}
 	
 	public VendasVO create(VendasVO venda) {
-		return repository.save(venda);
+		var entity = DozerMapper.parseObject(venda, Vendas.class);
+		entity.setCondicaoPagamento(CondicaoPagamento.NULL);
+		var vo = DozerMapper.parseObject(repository.save(entity), VendasVO.class);
+		return vo;
 	}
 	
 	public VendasVO update(VendasVO venda) {
-		var entity = repository.findById(venda.getId())
-				.orElseThrow(() -> new ResourceNotFoundException("Não existe venda com esse ID"));
-		entity.setCliente(venda.getCliente());
-		entity.setCondicaoPagamento(venda.getCondicaoPagamento());
-		entity.setDataVenda(venda.getDataVenda());
-		entity.setValorTotal(venda.getValorTotal());
-		return repository.save(entity);
+		var entity = DozerMapper.parseObject(repository.findById(venda.getKey()), Vendas.class);
+		if(entity == null) throw new ResourceNotFoundException("Não existe venda com esse ID");
+		var newEntity = DozerMapper.parseObject(venda, Vendas.class);
+		entity.setCliente(newEntity.getCliente());
+		entity.setCondicaoPagamento(newEntity.getCondicaoPagamento());
+		entity.setDataVenda(newEntity.getDataVenda());
+		entity.setValorTotal(newEntity.getValorTotal());
+		var vo = DozerMapper.parseObject(repository.save(entity), VendasVO.class);
+		return vo;
 	}
 	
 	public void delete(Long id) {

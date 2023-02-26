@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.leuxam.data.vo.v1.ComprasVO;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
+import br.com.leuxam.mapper.DozerMapper;
+import br.com.leuxam.model.Compras;
 import br.com.leuxam.repositories.ComprasRepository;
 
 @Service
@@ -16,25 +18,29 @@ public class ComprasService {
 	ComprasRepository repository;
 	
 	public List<ComprasVO> findAll(){
-		return repository.findAll();
+		return DozerMapper.parseListObjects(repository.findAll(), ComprasVO.class);
 	}
 	
 	public ComprasVO findById(Long id) {
 		var entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Não existe compras com esse ID"));
-		return entity;
+		return DozerMapper.parseObject(entity, ComprasVO.class);
 	}
 	
 	public ComprasVO create(ComprasVO compra) {
-		return repository.save(compra);
+		var entity = DozerMapper.parseObject(compra, Compras.class);
+		var vo = DozerMapper.parseObject(repository.save(entity), ComprasVO.class);
+		return vo;
 	}
 	
 	public ComprasVO update(ComprasVO compra) {
-		var entity = repository.findById(compra.getId())
-				.orElseThrow(() -> new ResourceNotFoundException("Não existe compras com esse ID"));
-		entity.setValorTotal(compra.getValorTotal());
-		entity.setFornecedor(compra.getFornecedor());
-		return repository.save(entity);
+		var entity = DozerMapper.parseObject(repository.findById(compra.getKey()), Compras.class);
+		if(entity == null) throw new ResourceNotFoundException("Não existe compras com esse ID");
+		var newEntity = DozerMapper.parseObject(compra, Compras.class);
+		entity.setValorTotal(newEntity.getValorTotal());
+		entity.setFornecedor(newEntity.getFornecedor());
+		var vo = DozerMapper.parseObject(repository.save(entity), ComprasVO.class);
+		return vo;
 	}
 	
 	public void delete(Long id){

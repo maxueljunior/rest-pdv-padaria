@@ -9,6 +9,7 @@ import br.com.leuxam.data.vo.v1.VendasVO;
 import br.com.leuxam.model.Estoque;
 import br.com.leuxam.model.VendaEstoque;
 import br.com.leuxam.model.Vendas;
+import br.com.leuxam.model.enums.CondicaoPagamento;
 
 public class MockVendaEstoque {
 	
@@ -23,7 +24,7 @@ public class MockVendaEstoque {
 	public VendaEstoque mockEntity(Integer number) {
 		VendaEstoque vendaEstoque = new VendaEstoque();
 		Estoque estoque = new Estoque(number.longValue(), null, null, null, null, null);
-		Vendas vendas = new Vendas(number.longValue(), null, null, null, null);
+		Vendas vendas = new Vendas(number.longValue(), null, null, CondicaoPagamento.PIX, null);
 		vendaEstoque.setEstoque(estoque);
 		vendaEstoque.setPreco(number.doubleValue());
 		vendaEstoque.setQuantidade(number.doubleValue());
@@ -34,7 +35,7 @@ public class MockVendaEstoque {
 	public VendaEstoqueVO mockVO(Integer number) {
 		VendaEstoqueVO vendaEstoque = new VendaEstoqueVO();
 		EstoqueVO estoque = new EstoqueVO(number.longValue(), null, null, null, null, null);
-		VendasVO vendas = new VendasVO(number.longValue(), null, null, null, null);
+		VendasVO vendas = new VendasVO(number.longValue(), null, null, CondicaoPagamento.PIX, null);
 		vendaEstoque.setEstoque(estoque);
 		vendaEstoque.setPreco(number.doubleValue());
 		vendaEstoque.setQuantidade(number.doubleValue());

@@ -31,7 +31,7 @@ public class MockCompras {
 		ComprasVO compras = new ComprasVO();
 		FornecedorVO fornecedor = new FornecedorVO(number.longValue(), null, null, null, null);
 		compras.setFornecedor(fornecedor);
-		compras.setId(number.longValue());
+		compras.setKey(number.longValue());
 		compras.setValorTotal(number.doubleValue());
 		return compras;
 	}

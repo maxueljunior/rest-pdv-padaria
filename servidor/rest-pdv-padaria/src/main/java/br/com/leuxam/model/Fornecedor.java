@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.leuxam.data.vo.v1.ComprasVO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -86,6 +89,11 @@ public class Fornecedor implements Serializable{
 
 	public void setNomeDoContato(String nomeDoContato) {
 		this.nomeDoContato = nomeDoContato;
+	}
+	
+	@JsonIgnore
+	public List<Compras> getCompras() {
+		return compras;
 	}
 
 	@Override

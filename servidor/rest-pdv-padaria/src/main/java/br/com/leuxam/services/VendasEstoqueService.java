@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.leuxam.data.vo.v1.VendaEstoqueVO;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
+import br.com.leuxam.mapper.DozerMapper;
+import br.com.leuxam.model.VendaEstoque;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import br.com.leuxam.repositories.VendasEstoqueRepository;
 
@@ -17,30 +19,33 @@ public class VendasEstoqueService {
 	VendasEstoqueRepository repository;
 	
 	public List<VendaEstoqueVO> findAll(){
-		return repository.findAll();
+		return DozerMapper.parseListObjects(repository.findAll(), VendaEstoqueVO.class);
 	}
 	
 	public VendaEstoqueVO create(VendaEstoqueVO vendaEstoque) {
 		vendaEstoque.getVendas().setCondicaoPagamento(CondicaoPagamento.NULL);
-		return repository.save(vendaEstoque);
+		var entity = DozerMapper.parseObject(vendaEstoque, VendaEstoque.class);
+		var vo = DozerMapper.parseObject(repository.save(entity), VendaEstoqueVO.class);
+		return vo;
 	}
 	
 	public List<VendaEstoqueVO> findAllWithProdutcs(Long id){
-		return repository.findAllWithProducts(id);
+		return DozerMapper.parseListObjects(repository.findAllWithProducts(id), VendaEstoqueVO.class);
 	}
 	
 	public List<VendaEstoqueVO> findAllWithVendas(Long id){
-		return repository.findAllWithVendas(id);
+		return DozerMapper.parseListObjects(repository.findAllWithVendas(id), VendaEstoqueVO.class);
 	}
 	
 	public VendaEstoqueVO updateByIdProductAndVendas(VendaEstoqueVO vendaEstoque) {
-		var entity = repository.findByIdProductAndVendas(vendaEstoque.getEstoque().getId(), vendaEstoque.getVendas().getId());
+		var entity = repository.findByIdProductAndVendas(vendaEstoque.getEstoque().getKey(), vendaEstoque.getVendas().getKey());
 		if(entity == null) {
 			throw new ResourceNotFoundException("Não encontrado o relatório com os ID's informados");
 		}
 		entity.setQuantidade(vendaEstoque.getQuantidade());
 		entity.setPreco(vendaEstoque.getPreco());
-		return repository.save(entity);
+		var vo = DozerMapper.parseObject(repository.save(entity), VendaEstoqueVO.class);
+		return vo;
 	}
 	
 	public void delete(Long idProdutos, Long idVendas) {

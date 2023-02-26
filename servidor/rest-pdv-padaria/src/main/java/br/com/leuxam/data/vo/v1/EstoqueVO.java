@@ -7,12 +7,14 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.dozermapper.core.Mapping;
 
 public class EstoqueVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
-	private Long id;
+
+	@Mapping("id")
+	private Long key;
 	private String descricao;
 	private Double quantidade;
 	private Date dataCompra;
@@ -23,8 +25,8 @@ public class EstoqueVO implements Serializable{
 	
 	public EstoqueVO() {}
 	
-	public EstoqueVO(Long id, String descricao, Double quantidade, Date dataCompra, Date dataValidade, String unidade) {
-		this.id = id;
+	public EstoqueVO(Long key, String descricao, Double quantidade, Date dataCompra, Date dataValidade, String unidade) {
+		this.key = key;
 		this.descricao = descricao;
 		this.quantidade = quantidade;
 		this.dataCompra = dataCompra;
@@ -32,12 +34,12 @@ public class EstoqueVO implements Serializable{
 		this.unidade = unidade;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getKey() {
+		return key;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setKey(Long key) {
+		this.key = key;
 	}
 
 	public String getDescricao() {
@@ -100,7 +102,7 @@ public class EstoqueVO implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(dataCompra, dataValidade, descricao, id, quantidade, unidade);
+		return Objects.hash(dataCompra, dataValidade, descricao, key, quantidade, unidade);
 	}
 
 	@Override
@@ -113,7 +115,7 @@ public class EstoqueVO implements Serializable{
 			return false;
 		EstoqueVO other = (EstoqueVO) obj;
 		return Objects.equals(dataCompra, other.dataCompra) && Objects.equals(dataValidade, other.dataValidade)
-				&& Objects.equals(descricao, other.descricao) && Objects.equals(id, other.id)
+				&& Objects.equals(descricao, other.descricao) && Objects.equals(key, other.key)
 				&& Objects.equals(quantidade, other.quantidade) && Objects.equals(unidade, other.unidade);
 	}
 }

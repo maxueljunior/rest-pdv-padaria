@@ -6,30 +6,32 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.dozermapper.core.Mapping;
 
 public class ComprasVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private Long id;
+	@Mapping("id")
+	private Long key;
 	private Double valorTotal;
 	private FornecedorVO fornecedor;
 	private Set<CompraEstoqueVO> items = new HashSet<>();
 	
 	public ComprasVO() {}
 
-	public ComprasVO(Long id, Double valorTotal, FornecedorVO fornecedor) {
-		this.id = id;
+	public ComprasVO(Long key, Double valorTotal, FornecedorVO fornecedor) {
+		this.key = key;
 		this.valorTotal = valorTotal;
 		this.fornecedor = fornecedor;
 	}
 
-	public Long getId() {
-		return id;
+	public Long getKey() {
+		return key;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setKey(Long key) {
+		this.key = key;
 	}
 
 	public FornecedorVO getFornecedor() {
@@ -55,7 +57,7 @@ public class ComprasVO implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, valorTotal);
+		return Objects.hash(key, valorTotal);
 	}
 
 	@Override
@@ -67,6 +69,6 @@ public class ComprasVO implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		ComprasVO other = (ComprasVO) obj;
-		return Objects.equals(id, other.id) && Objects.equals(valorTotal, other.valorTotal);
+		return Objects.equals(key, other.key) && Objects.equals(valorTotal, other.valorTotal);
 	}
 }
