@@ -30,6 +30,9 @@ public interface VendasEstoqueRepository extends JpaRepository<VendaEstoque, Lon
 			@Param("idProduto") Long idProduto,
 			@Param("idVendas") Long idVendas);
 	
+	@Query("SELECT SUM (v.preco * v.quantidade) FROM VendaEstoque v WHERE v.id.vendas.id =:idVendas")
+	public Double updateValorTotalFromVendas(@Param("idVendas") Long idVendas);
+	
 	/*
 	 * 
 	 * Esssa função está comentada pois não vejo sentido nela agora

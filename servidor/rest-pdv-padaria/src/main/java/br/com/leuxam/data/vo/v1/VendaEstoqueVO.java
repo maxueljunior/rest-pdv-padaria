@@ -3,14 +3,20 @@ package br.com.leuxam.data.vo.v1;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
 import br.com.leuxam.data.pk.vo.v1.VendaEstoquePKVO;
 
+@JsonPropertyOrder({"id", "quantidade", "preco"})
 public class VendaEstoqueVO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-
+	
+	@JsonIgnore
+	@JsonProperty("id")
 	@Mapping("id")
 	private VendaEstoquePKVO key = new VendaEstoquePKVO();
 	private Double quantidade;

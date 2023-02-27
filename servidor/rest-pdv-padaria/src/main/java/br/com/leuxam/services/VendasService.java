@@ -29,8 +29,8 @@ public class VendasService {
 	}
 	
 	public VendasVO create(VendasVO venda) {
+		venda.setCondicaoPagamento(CondicaoPagamento.NULL);
 		var entity = DozerMapper.parseObject(venda, Vendas.class);
-		entity.setCondicaoPagamento(CondicaoPagamento.NULL);
 		var vo = DozerMapper.parseObject(repository.save(entity), VendasVO.class);
 		return vo;
 	}
@@ -39,6 +39,7 @@ public class VendasService {
 		var entity = DozerMapper.parseObject(repository.findById(venda.getKey()), Vendas.class);
 		if(entity == null) throw new ResourceNotFoundException("Não existe venda com esse ID");
 		var newEntity = DozerMapper.parseObject(venda, Vendas.class);
+		entity.setId(newEntity.getId());
 		entity.setCliente(newEntity.getCliente());
 		entity.setCondicaoPagamento(newEntity.getCondicaoPagamento());
 		entity.setDataVenda(newEntity.getDataVenda());

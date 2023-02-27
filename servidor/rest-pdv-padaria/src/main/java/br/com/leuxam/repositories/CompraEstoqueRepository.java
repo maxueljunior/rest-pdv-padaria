@@ -23,10 +23,13 @@ public interface CompraEstoqueRepository extends JpaRepository<CompraEstoque, Lo
 	public CompraEstoque findByIdProdutoAndCompras(
 			@Param("idProduto") Long idProduto,
 			@Param("idCompra") Long idCompra);
-	
+
 	@Modifying
 	@Query("DELETE FROM CompraEstoque c WHERE c.id.estoque.id =:idProduto AND c.id.compras.id =:idCompra")
 	public void deleteByIdProdutoAndCompras(
 			@Param("idProduto") Long idProduto,
 			@Param("idCompra") Long idCompra);
+	
+	@Query("SELECT SUM (c.preco * c.quantidade) FROM CompraEstoque c WHERE c.id.compras.id =:idCompras")
+	public Double updateValorTotalFromCompras(@Param("idCompras") Long idCompras);
 }

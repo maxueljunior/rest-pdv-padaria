@@ -37,6 +37,7 @@ public class ComprasService {
 		var entity = DozerMapper.parseObject(repository.findById(compra.getKey()), Compras.class);
 		if(entity == null) throw new ResourceNotFoundException("Não existe compras com esse ID");
 		var newEntity = DozerMapper.parseObject(compra, Compras.class);
+		entity.setId(newEntity.getId());
 		entity.setValorTotal(newEntity.getValorTotal());
 		entity.setFornecedor(newEntity.getFornecedor());
 		var vo = DozerMapper.parseObject(repository.save(entity), ComprasVO.class);

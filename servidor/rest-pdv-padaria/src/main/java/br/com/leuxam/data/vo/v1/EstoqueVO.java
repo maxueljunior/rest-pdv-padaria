@@ -7,12 +7,16 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
+@JsonPropertyOrder({"id", "descricao", "quantidade", "dataCompra", "dataValidade", "unidade", "items", "compras"})
 public class EstoqueVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-
+	
+	@JsonProperty("id")
 	@Mapping("id")
 	private Long key;
 	private String descricao;

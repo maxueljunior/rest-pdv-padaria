@@ -11,6 +11,8 @@ import br.com.leuxam.mapper.DozerMapper;
 import br.com.leuxam.model.VendaEstoque;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import br.com.leuxam.repositories.VendasEstoqueRepository;
+import br.com.leuxam.repositories.VendasRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class VendasEstoqueService {
@@ -18,14 +20,20 @@ public class VendasEstoqueService {
 	@Autowired
 	VendasEstoqueRepository repository;
 	
+	@Autowired
+	VendasRepository vendasRepository;
+	
 	public List<VendaEstoqueVO> findAll(){
 		return DozerMapper.parseListObjects(repository.findAll(), VendaEstoqueVO.class);
 	}
 	
+	@Transactional
 	public VendaEstoqueVO create(VendaEstoqueVO vendaEstoque) {
 		vendaEstoque.getVendas().setCondicaoPagamento(CondicaoPagamento.NULL);
 		var entity = DozerMapper.parseObject(vendaEstoque, VendaEstoque.class);
 		var vo = DozerMapper.parseObject(repository.save(entity), VendaEstoqueVO.class);
+		Double valorTotalAtt = repository.updateValorTotalFromVendas(entity.getVendas().getId());
+		vendasRepository.updateValorTotalFromVendas(valorTotalAtt, entity.getVendas().getId());
 		return vo;
 	}
 	
@@ -37,6 +45,7 @@ public class VendasEstoqueService {
 		return DozerMapper.parseListObjects(repository.findAllWithVendas(id), VendaEstoqueVO.class);
 	}
 	
+	@Transactional
 	public VendaEstoqueVO updateByIdProductAndVendas(VendaEstoqueVO vendaEstoque) {
 		var entity = repository.findByIdProductAndVendas(vendaEstoque.getEstoque().getKey(), vendaEstoque.getVendas().getKey());
 		if(entity == null) {
@@ -45,14 +54,19 @@ public class VendasEstoqueService {
 		entity.setQuantidade(vendaEstoque.getQuantidade());
 		entity.setPreco(vendaEstoque.getPreco());
 		var vo = DozerMapper.parseObject(repository.save(entity), VendaEstoqueVO.class);
+		Double valorTotalAtt = repository.updateValorTotalFromVendas(entity.getVendas().getId());
+		vendasRepository.updateValorTotalFromVendas(valorTotalAtt, entity.getVendas().getId());
 		return vo;
 	}
 	
+	@Transactional
 	public void delete(Long idProdutos, Long idVendas) {
 		if(idProdutos == 0 || idVendas == 0) throw new ResourceNotFoundException("Id do produto ou Id da venda está zerado!");
 		var entity = repository.findByIdProductAndVendas(idProdutos, idVendas);
 		if(entity == null) throw new ResourceNotFoundException("Não encontrado a Venda de Produtos com os ID's informados");
 		repository.delete(entity);
+		Double valorTotalAtt = repository.updateValorTotalFromVendas(entity.getVendas().getId());
+		vendasRepository.updateValorTotalFromVendas(valorTotalAtt, entity.getVendas().getId());
 	}
 	
 	/*
