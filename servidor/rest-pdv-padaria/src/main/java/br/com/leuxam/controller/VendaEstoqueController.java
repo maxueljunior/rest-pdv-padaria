@@ -3,7 +3,6 @@ package br.com.leuxam.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.leuxam.data.vo.v1.VendaEstoqueVO;
 import br.com.leuxam.services.VendasEstoqueService;
+import br.com.leuxam.util.MediaType;
 
 @RestController
 @RequestMapping("/venda-de-produtos")
@@ -24,17 +24,19 @@ public class VendaEstoqueController {
 	@Autowired
 	private VendasEstoqueService service;
 	
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
 	public List<VendaEstoqueVO> findAll(){
 		return service.findAll();
 	}
 	
-	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
+			consumes = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
 	public VendaEstoqueVO create(@RequestBody VendaEstoqueVO vendaEstoque) {
 		return service.create(vendaEstoque);
 	}
 	
-	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
+			consumes = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
 	public VendaEstoqueVO update(@RequestBody VendaEstoqueVO vendaEstoque) {
 		return service.updateByIdProductAndVendas(vendaEstoque);
 	}
@@ -47,7 +49,7 @@ public class VendaEstoqueController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@GetMapping(value = "/relatorio", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/relatorio", produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
 	public List<VendaEstoqueVO> findAllWithProdutoOrVendas(
 			@RequestParam(value = "id", defaultValue = "1") Long id,
 			@RequestParam(value = "table", defaultValue = "produto") String table){
@@ -63,7 +65,7 @@ public class VendaEstoqueController {
 	 * Essa função está comentada pois não vejo necessidade nela ainda
 	 * 
 	 * 
-	@PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@PatchMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public ResponseEntity<?> updateProductsWithVendas(
 			@RequestParam(value = "productAnt", defaultValue = "0") Long idProdutoAntigo,
 			@RequestParam(value = "order", defaultValue = "0") Long idVendas,

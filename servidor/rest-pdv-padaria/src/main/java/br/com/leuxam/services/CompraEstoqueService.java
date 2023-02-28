@@ -2,9 +2,12 @@ package br.com.leuxam.services;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.leuxam.controller.CompraEstoqueController;
 import br.com.leuxam.data.vo.v1.CompraEstoqueVO;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.mapper.DozerMapper;
@@ -21,12 +24,6 @@ public class CompraEstoqueService {
 	
 	@Autowired
 	ComprasRepository comprasRepository;
-	
-	public CompraEstoqueVO findById(Long id) {
-		var entity = repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Não existe nenhuma compra"));
-		return DozerMapper.parseObject(entity, CompraEstoqueVO.class);
-	}
 	
 	public List<CompraEstoqueVO> findAll(){
 		return DozerMapper.parseListObjects(repository.findAll(), CompraEstoqueVO.class);

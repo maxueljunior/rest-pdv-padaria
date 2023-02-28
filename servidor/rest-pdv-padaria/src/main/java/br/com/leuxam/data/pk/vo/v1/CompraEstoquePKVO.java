@@ -3,10 +3,12 @@ package br.com.leuxam.data.pk.vo.v1;
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import br.com.leuxam.data.vo.v1.ComprasVO;
 import br.com.leuxam.data.vo.v1.EstoqueVO;
 
-public class CompraEstoquePKVO implements Serializable{
+public class CompraEstoquePKVO extends RepresentationModel<CompraEstoquePKVO> implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	

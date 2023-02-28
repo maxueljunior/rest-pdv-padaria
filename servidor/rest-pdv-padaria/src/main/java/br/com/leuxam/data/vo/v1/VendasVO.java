@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -14,7 +16,7 @@ import com.github.dozermapper.core.Mapping;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 
 @JsonPropertyOrder({"id", "dataVenda", "valorTotal", "condicaoPagamento", "cliente", "items"})
-public class VendasVO implements Serializable{
+public class VendasVO extends RepresentationModel<VendasVO> implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
