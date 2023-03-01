@@ -14,6 +14,7 @@ import br.com.leuxam.controller.ComprasController;
 import br.com.leuxam.controller.FornecedorController;
 import br.com.leuxam.data.vo.v1.ComprasVO;
 import br.com.leuxam.data.vo.v1.FornecedorVO;
+import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.mapper.DozerMapper;
 import br.com.leuxam.model.Compras;
@@ -60,6 +61,7 @@ public class ComprasService {
 	}
 	
 	public ComprasVO create(ComprasVO compra) {
+		if(compra == null) throw new RequiredObjectIsNullException();
 		var entity = DozerMapper.parseObject(compra, Compras.class);
 		var vo = DozerMapper.parseObject(repository.save(entity), ComprasVO.class);
 		vo.add(linkTo(methodOn(ComprasController.class).findById(vo.getKey())).withSelfRel());
@@ -70,6 +72,7 @@ public class ComprasService {
 	}
 	
 	public ComprasVO update(ComprasVO compra) {
+		if(compra == null) throw new RequiredObjectIsNullException();
 		var entity = DozerMapper.parseObject(repository.findById(compra.getKey()), Compras.class);
 		if(entity == null) throw new ResourceNotFoundException("Não existe compras com esse ID");
 		var newEntity = DozerMapper.parseObject(compra, Compras.class);

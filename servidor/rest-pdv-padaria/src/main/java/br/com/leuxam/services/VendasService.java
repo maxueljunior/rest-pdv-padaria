@@ -13,6 +13,7 @@ import br.com.leuxam.controller.ClienteController;
 import br.com.leuxam.controller.VendasController;
 import br.com.leuxam.data.vo.v1.ClienteVO;
 import br.com.leuxam.data.vo.v1.VendasVO;
+import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.mapper.DozerMapper;
 import br.com.leuxam.model.Vendas;
@@ -60,6 +61,7 @@ public class VendasService {
 	}
 	
 	public VendasVO create(VendasVO venda) {
+		if(venda == null) throw new RequiredObjectIsNullException();
 		venda.setCondicaoPagamento(CondicaoPagamento.NULL);
 		var entity = DozerMapper.parseObject(venda, Vendas.class);
 		var vo = DozerMapper.parseObject(repository.save(entity), VendasVO.class);
@@ -71,6 +73,7 @@ public class VendasService {
 	}
 	
 	public VendasVO update(VendasVO venda) {
+		if(venda == null) throw new RequiredObjectIsNullException();
 		var entity = DozerMapper.parseObject(repository.findById(venda.getKey()), Vendas.class);
 		if(entity == null) throw new ResourceNotFoundException("Não existe venda com esse ID");
 		var newEntity = DozerMapper.parseObject(venda, Vendas.class);

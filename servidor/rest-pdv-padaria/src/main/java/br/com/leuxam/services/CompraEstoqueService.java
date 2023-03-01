@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.leuxam.data.vo.v1.CompraEstoqueVO;
+import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.mapper.DozerMapper;
 import br.com.leuxam.model.CompraEstoque;
@@ -36,6 +37,7 @@ public class CompraEstoqueService {
 	
 	@Transactional
 	public CompraEstoqueVO create(CompraEstoqueVO compraEstoque) {
+		if(compraEstoque == null) throw new RequiredObjectIsNullException();
 		var entity = DozerMapper.parseObject(compraEstoque, CompraEstoque.class);
 		var vo = DozerMapper.parseObject(repository.save(entity), CompraEstoqueVO.class);
 		Double valorTotalAtt = repository.updateValorTotalFromCompras(entity.getCompras().getId());
@@ -45,6 +47,7 @@ public class CompraEstoqueService {
 	
 	@Transactional
 	public CompraEstoqueVO update(CompraEstoqueVO compraEstoque) {
+		if(compraEstoque == null) throw new RequiredObjectIsNullException();
 		var entity = repository.findByIdProdutoAndCompras(compraEstoque.getEstoque().getKey(), compraEstoque.getCompras().getKey());
 		if(entity == null) throw new ResourceNotFoundException("Não encontrado o relatório com os ID's informados");
 		entity.setQuantidade(compraEstoque.getQuantidade());

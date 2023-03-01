@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.leuxam.controller.EstoqueController;
 import br.com.leuxam.data.vo.v1.EstoqueVO;
+import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.mapper.DozerMapper;
 import br.com.leuxam.model.Estoque;
@@ -37,6 +38,7 @@ public class EstoqueService {
 	}
 	
 	public EstoqueVO create(EstoqueVO estoque) {
+		if(estoque == null) throw new RequiredObjectIsNullException();
 		var entity = DozerMapper.parseObject(estoque, Estoque.class);
 		var vo = DozerMapper.parseObject(repository.save(entity), EstoqueVO.class);
 		vo.add(linkTo(methodOn(EstoqueController.class).findById(vo.getKey())).withSelfRel());
@@ -44,6 +46,7 @@ public class EstoqueService {
 	}
 	
 	public EstoqueVO update(EstoqueVO estoque) {
+		if(estoque == null) throw new RequiredObjectIsNullException();
 		var entity = repository.findById(estoque.getKey())
 				.orElseThrow(() -> new ResourceNotFoundException("Não existe nenhum produto com esse ID"));
 		entity.setDataCompra(estoque.getDataCompra());

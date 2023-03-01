@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.leuxam.controller.FornecedorController;
 import br.com.leuxam.data.vo.v1.FornecedorVO;
+import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.mapper.DozerMapper;
 import br.com.leuxam.model.Fornecedor;
@@ -37,6 +38,7 @@ public class FornecedorService {
 	}
 	
 	public FornecedorVO create(FornecedorVO fornecedor) {
+		if(fornecedor == null) throw new RequiredObjectIsNullException();
 		var entity = DozerMapper.parseObject(fornecedor, Fornecedor.class);
 		var vo = DozerMapper.parseObject(repository.save(entity), FornecedorVO.class);
 		vo.add(linkTo(methodOn(FornecedorController.class).findById(vo.getKey())).withSelfRel());
@@ -44,6 +46,7 @@ public class FornecedorService {
 	}
 	
 	public FornecedorVO update(FornecedorVO fornecedor) {
+		if(fornecedor == null) throw new RequiredObjectIsNullException();
 		var entity = repository.findById(fornecedor.getKey())
 				.orElseThrow(() -> new ResourceNotFoundException("Não existe fornecedor com esse ID"));
 		entity.setCnpj(fornecedor.getCnpj());

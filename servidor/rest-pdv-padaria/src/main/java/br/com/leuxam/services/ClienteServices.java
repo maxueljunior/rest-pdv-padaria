@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.leuxam.controller.ClienteController;
 import br.com.leuxam.data.vo.v1.ClienteVO;
+import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.mapper.DozerMapper;
 import br.com.leuxam.model.Cliente;
@@ -37,6 +38,7 @@ public class ClienteServices {
 	}
 	
 	public ClienteVO create(ClienteVO cliente) {
+		if(cliente == null) throw new RequiredObjectIsNullException();
 		var entity = DozerMapper.parseObject(cliente, Cliente.class);
 		var vo = DozerMapper.parseObject(repository.save(entity), ClienteVO.class);
 		vo.add(linkTo(methodOn(ClienteController.class).findById(vo.getKey())).withSelfRel());
@@ -44,6 +46,7 @@ public class ClienteServices {
 	}
 	
 	public ClienteVO update(ClienteVO cliente) {
+		if(cliente == null) throw new RequiredObjectIsNullException();
 		var entity = repository.findById(cliente.getKey())
 				.orElseThrow(() -> new ResourceNotFoundException("Não tem nenhum cliente com esse ID"));
 		entity.setDataNascimento(cliente.getDataNascimento());
