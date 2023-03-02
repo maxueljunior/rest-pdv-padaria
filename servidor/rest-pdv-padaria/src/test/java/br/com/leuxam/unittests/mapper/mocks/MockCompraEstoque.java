@@ -57,4 +57,22 @@ public class MockCompraEstoque {
 		}
 		return comprasEstoque;
 	}
+	
+	public List<CompraEstoque> mockEntityListForProducts(){
+		List<CompraEstoque> comprasEstoque = new ArrayList<>();
+		for(int i = 0; i < 14; i++) {
+			comprasEstoque.add(mockEntity(i));
+			comprasEstoque.get(i).getEstoque().setId(1L);
+		}
+		return comprasEstoque;
+	}
+	
+	public List<CompraEstoque> mockEntityListForOrders(){
+		List<CompraEstoque> comprasEstoque = new ArrayList<>();
+		for(int i = 0; i < 14; i++) {
+			comprasEstoque.add(mockEntity(i));
+			comprasEstoque.get(i).getCompras().setId(1L);
+		}
+		return comprasEstoque;
+	}
 }
