@@ -146,7 +146,7 @@ class ClienteServicesTest {
 	}
 	
 	@Test
-	void testCreateWithNullPerson() {
+	void testCreateWithNullCliente() {
 		Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
 			service.create(null);
 		});
@@ -185,7 +185,7 @@ class ClienteServicesTest {
 	}
 	
 	@Test
-	void testUpdateWithNullPerson() {
+	void testUpdateWithNullCliente() {
 		Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
 			service.update(null);
 		});
