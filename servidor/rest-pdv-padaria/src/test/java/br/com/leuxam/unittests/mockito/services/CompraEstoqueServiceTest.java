@@ -172,6 +172,7 @@ class CompraEstoqueServiceTest {
 		// when(repository.updateValorTotalFromCompras(1L)).thenReturn(1.0);
 		
 		comprasRepository.updateValorTotalFromCompras(1.0, 1L);
+
 	}
 	
 	@Test

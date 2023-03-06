@@ -49,6 +49,25 @@ public class MockVendaEstoque {
 			vendaEstoque.add(mockEntity(i));
 		}
 		return vendaEstoque;
+	}	
+	
+	public List<VendaEstoque> mockEntityListForProdutos(){
+		List<VendaEstoque> vendaEstoque = new ArrayList<>();
+		for(int i = 0; i<14; i++) {
+			vendaEstoque.add(mockEntity(i));
+			vendaEstoque.get(i).getEstoque().setId(1L);
+		}
+		return vendaEstoque;
+	}
+	
+	
+	public List<VendaEstoque> mockEntityListForVendas(){
+		List<VendaEstoque> vendaEstoque = new ArrayList<>();
+		for(int i = 0; i<14; i++) {
+			vendaEstoque.add(mockEntity(i));
+			vendaEstoque.get(i).getVendas().setId(1L);
+		}
+		return vendaEstoque;
 	}
 	
 	public List<VendaEstoqueVO> mockVOList(){

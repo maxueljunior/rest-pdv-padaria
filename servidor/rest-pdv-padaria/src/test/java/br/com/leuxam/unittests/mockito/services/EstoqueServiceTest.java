@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +66,53 @@ class EstoqueServiceTest {
 
 	@Test
 	void testFindAll() {
-		fail("Not yet implemented");
+		List<Estoque> list = input.mockEntityList();
+		
+		when(repository.findAll()).thenReturn(list);
+		
+		var estoque = service.findAll();
+		assertNotNull(estoque);
+		assertEquals(14, estoque.size());
+		
+		var estoqueUm = estoque.get(1);
+		
+		assertNotNull(estoqueUm);
+		assertNotNull(estoqueUm.getKey());
+		assertNotNull(estoqueUm.getLinks());
+		assertTrue(estoqueUm.toString().contains("links: [</produto/1>;rel=\"self\"]"));
+		
+		assertNotNull(estoqueUm.getDataCompra());
+		assertNotNull(estoqueUm.getDataValidade());
+		assertEquals("Descricao1", estoqueUm.getDescricao());
+		assertEquals(1.0, estoqueUm.getQuantidade());
+		assertEquals("KG", estoqueUm.getUnidade());
+		
+		var estoqueCinco = estoque.get(5);
+		
+		assertNotNull(estoqueCinco);
+		assertNotNull(estoqueCinco.getKey());
+		assertNotNull(estoqueCinco.getLinks());
+		assertTrue(estoqueCinco.toString().contains("links: [</produto/5>;rel=\"self\"]"));
+		
+		assertNotNull(estoqueCinco.getDataCompra());
+		assertNotNull(estoqueCinco.getDataValidade());
+		assertEquals("Descricao5", estoqueCinco.getDescricao());
+		assertEquals(5.0, estoqueCinco.getQuantidade());
+		assertEquals("KG", estoqueCinco.getUnidade());
+		
+		var estoqueNove = estoque.get(9);
+		
+		assertNotNull(estoqueNove);
+		assertNotNull(estoqueNove.getKey());
+		assertNotNull(estoqueNove.getLinks());
+		assertTrue(estoqueNove.toString().contains("links: [</produto/9>;rel=\"self\"]"));
+		
+		assertNotNull(estoqueNove.getDataCompra());
+		assertNotNull(estoqueNove.getDataValidade());
+		assertEquals("Descricao9", estoqueNove.getDescricao());
+		assertEquals(9.0, estoqueNove.getQuantidade());
+		assertEquals("KG", estoqueNove.getUnidade());
+		
 	}
 
 	@Test
@@ -116,8 +162,9 @@ class EstoqueServiceTest {
 		EstoqueVO vo = input.mockVO(1);
 		vo.setKey(1L);
 		
+		when(repository.findById(1L)).thenReturn(Optional.of(entity));
 		when(repository.save(entity)).thenReturn(persisted);
-		var result = service.create(vo);
+		var result = service.update(vo);
 		
 		assertNotNull(result);
 		assertNotNull(result.getKey());
@@ -144,7 +191,10 @@ class EstoqueServiceTest {
 		
 	@Test
 	void testDelete() {
-		fail("Not yet implemented");
+		Estoque entity = input.mockEntity(1);
+		entity.setId(1L);
+		when(repository.findById(1L)).thenReturn(Optional.of(entity));
+		service.delete(1L);
 	}
 
 }

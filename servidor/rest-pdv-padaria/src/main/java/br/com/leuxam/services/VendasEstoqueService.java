@@ -10,6 +10,7 @@ import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.mapper.DozerMapper;
 import br.com.leuxam.model.VendaEstoque;
+import br.com.leuxam.model.Vendas;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import br.com.leuxam.repositories.VendasEstoqueRepository;
 import br.com.leuxam.repositories.VendasRepository;
@@ -33,6 +34,13 @@ public class VendasEstoqueService {
 		if(vendaEstoque == null) throw new RequiredObjectIsNullException();
 		vendaEstoque.getVendas().setCondicaoPagamento(CondicaoPagamento.NULL);
 		var entity = DozerMapper.parseObject(vendaEstoque, VendaEstoque.class);
+		
+		Vendas vendas = entity.getVendas();
+		vendas = vendasRepository.findById(vendas.getId())
+				.orElseThrow(() -> new ResourceNotFoundException("Não encontrado a Venda"));
+		
+		vendas.setCondicaoPagamento(vendas.getCondicaoPagamento());
+		entity.setVendas(vendas);
 		var vo = DozerMapper.parseObject(repository.save(entity), VendaEstoqueVO.class);
 		Double valorTotalAtt = repository.updateValorTotalFromVendas(entity.getVendas().getId());
 		vendasRepository.updateValorTotalFromVendas(valorTotalAtt, entity.getVendas().getId());
