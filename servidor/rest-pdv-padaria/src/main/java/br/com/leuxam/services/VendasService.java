@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,13 +63,15 @@ public class VendasService {
 	
 	public VendasVO create(VendasVO venda) {
 		if(venda == null) throw new RequiredObjectIsNullException();
-		venda.setCondicaoPagamento(CondicaoPagamento.NULL);
+		venda.setCondicaoPagamento(CondicaoPagamento.PIX);
 		var entity = DozerMapper.parseObject(venda, Vendas.class);
 		var vo = DozerMapper.parseObject(repository.save(entity), VendasVO.class);
 		vo.add(linkTo(methodOn(VendasController.class).findById(vo.getKey())).withSelfRel());
 		ClienteVO cliente = vo.getCliente();
 		cliente.add(linkTo(methodOn(ClienteController.class).findById(cliente.getKey())).withSelfRel());
 		vo.setCliente(cliente);
+		vo.setCondicaoPagamento(CondicaoPagamento.NULL);
+		vo.setDataVenda(new Date());
 		return vo;
 	}
 	
