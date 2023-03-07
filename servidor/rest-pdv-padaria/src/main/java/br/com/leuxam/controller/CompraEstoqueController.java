@@ -116,7 +116,7 @@ public class CompraEstoqueController {
 	}
 	
 	@DeleteMapping()
-	@Operation(summary = "Atualizar um produto em uma compra", description = "Atualizar um produto em uma compra",
+	@Operation(summary = "Deleter um produto em uma compra", description = "Deleter um produto em uma compra",
 		tags = {"Compras Estoque"},
 		responses = {
 			@ApiResponse(description = "No Content", responseCode = "204",content = @Content),
