@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,15 +42,15 @@ public class AuthController {
 	@SuppressWarnings("rawtypes")
 	@Operation(summary = "Refresh token para autenticação de Usuarios")
 	@PutMapping(value = "/refresh/{username}")
-	public ResponseEntity refreshToken(@PathVariable("username") String username) {
-		if (checkIfParamIsNotNull(data)) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalida requisição de Cliente");
-		var token = services.refreshToken(data);
+	public ResponseEntity refreshToken(@PathVariable("username") String username, @RequestHeader("Authorization") String refreshToken) {
+		if (checkIfParamIsNotNull(username, refreshToken)) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalida requisição de Cliente");
+		var token = services.refreshToken(username, refreshToken);
 		if(token == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalida requisição de Cliente");
 		return token;
 	}
 
-	private boolean checkIfParamIsNotNull(AccountCredentialsVO data) {
-		return data == null || data.getUsername() == null || data.getUsername().isBlank()
-				|| data.getPassword() == null || data.getPassword().isBlank();
+	private boolean checkIfParamIsNotNull(String username, String refreshToken) {
+		return refreshToken == null || refreshToken.isBlank() || username == null || username.isBlank();
 	}
+
 }
