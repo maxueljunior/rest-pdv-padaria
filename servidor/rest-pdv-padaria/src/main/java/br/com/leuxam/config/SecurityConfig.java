@@ -53,8 +53,8 @@ public class SecurityConfig{
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(
 					authorizeHttpRequests -> authorizeHttpRequests
-						.requestMatchers("/auth/signin", "/auth/refresh", "/api-docs/**", "/swagger-ui.html**").permitAll()
-						.requestMatchers("/**").authenticated()
+						.requestMatchers("/auth/signin", "/auth/refresh/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+						.requestMatchers("/api/**").authenticated()
 						.requestMatchers("/users").denyAll()
 					)
 				.cors()

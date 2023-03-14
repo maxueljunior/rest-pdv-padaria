@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping(name = "/auth")
+@RequestMapping("/auth")
 @Tag(name = "Autenticação end point")
 public class AuthController {
 	

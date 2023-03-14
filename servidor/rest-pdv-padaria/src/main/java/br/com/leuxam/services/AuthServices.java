@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.leuxam.data.vo.v1.security.AccountCredentialsVO;
@@ -25,12 +26,15 @@ public class AuthServices {
 	@Autowired
 	private UserRepository repository;
 	
+	@Autowired
+	private DelegatingPasswordEncoder passwordEncoder;
+	
 	@SuppressWarnings("rawtypes")
 	public ResponseEntity signin(AccountCredentialsVO data){
 		try {
 			var username = data.getUsername();
 			var password = data.getPassword();
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
 			
 			var user = repository.findByUserName(username);
 			
