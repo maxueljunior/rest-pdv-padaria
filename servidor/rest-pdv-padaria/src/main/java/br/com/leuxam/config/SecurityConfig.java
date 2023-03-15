@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -54,8 +55,11 @@ public class SecurityConfig{
 				.authorizeHttpRequests(
 					authorizeHttpRequests -> authorizeHttpRequests
 						.requestMatchers("/auth/signin", "/auth/refresh/**","/v3/api-docs/**", "/swagger-ui/**").permitAll()
-						.requestMatchers("/api/**").authenticated()
+						//.requestMatchers("/api/**").authenticated()
+						.requestMatchers("/api/**").hasAnyAuthority("ADMIN", "MANAGER")
+						//.requestMatchers(HttpMethod.GET, "/api/vendas").hasAnyAuthority("COMMON_USER")
 						.requestMatchers("/users").denyAll()
+						.anyRequest().authenticated()
 					)
 				.cors()
 				.and()
