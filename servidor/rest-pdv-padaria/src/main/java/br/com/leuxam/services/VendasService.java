@@ -17,12 +17,17 @@ import br.com.leuxam.data.vo.v1.VendasVO;
 import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.mapper.DozerMapper;
+import br.com.leuxam.model.Permission;
 import br.com.leuxam.model.Vendas;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import br.com.leuxam.repositories.VendasRepository;
+import br.com.leuxam.security.jwt.JwtTokenProvider;
 
 @Service
 public class VendasService {
+	
+	@Autowired
+	private JwtTokenProvider tokenProvider;
 	
 	@Autowired
 	VendasRepository repository;
@@ -39,6 +44,7 @@ public class VendasService {
 	}
 	
 	public List<VendasVO> findAll(){
+		
 		var vendas = DozerMapper.parseListObjects(repository.findAll(), VendasVO.class);
 		vendas
 			.stream()

@@ -1,5 +1,6 @@
 package br.com.leuxam.security.jwt;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import br.com.leuxam.data.vo.v1.security.TokenVO;
 import br.com.leuxam.exceptions.InvalidJwtAuthenticationException;
+import br.com.leuxam.model.Permission;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -59,6 +61,18 @@ public class JwtTokenProvider {
 		String username = decodedJWT.getSubject();
 		List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
 		return createAccessToken(username, roles);
+	}
+	
+	public List<Permission> getRolesWithToken(String token){
+		if(token.contains("Bearer ")) token = token.substring("Bearer ".length());
+		JWTVerifier verifier = JWT.require(algorithm).build();
+		DecodedJWT decodedJWT = verifier.verify(token);
+		List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+		List<Permission> permissions = new ArrayList<>();
+		for (String role : roles) {
+			permissions.add(new Permission(role));
+		}
+		return permissions;
 	}
 	
 	private String getAccessToken(String username, List<String> roles, Date now, Date validity) {

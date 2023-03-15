@@ -26,6 +26,10 @@ public class Permission implements GrantedAuthority, Serializable{
 	private String description;
 	
 	public Permission() {}
+	
+	public Permission(String description) {
+		this.description = description;
+	}
 
 	@Override
 	public String getAuthority() {
@@ -64,4 +68,10 @@ public class Permission implements GrantedAuthority, Serializable{
 		Permission other = (Permission) obj;
 		return Objects.equals(description, other.description) && Objects.equals(id, other.id);
 	}
+
+	@Override
+	public String toString() {
+		return "Permission [id=" + id + ", description=" + description + "]";
+	}
+	
 }
