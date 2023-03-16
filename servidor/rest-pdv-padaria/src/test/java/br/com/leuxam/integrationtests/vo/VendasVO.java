@@ -9,7 +9,9 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.leuxam.model.enums.CondicaoPagamento;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 public class VendasVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;

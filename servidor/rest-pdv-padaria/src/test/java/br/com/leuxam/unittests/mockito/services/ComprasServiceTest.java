@@ -56,8 +56,8 @@ class ComprasServiceTest {
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
 		assertNotNull(result.getFornecedor().getLinks());
-		assertTrue(result.toString().contains("links: [</compras/1>;rel=\"self\"]"));
-		assertTrue(result.getFornecedor().toString().contains("links: [</fornecedor/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/compras/1>;rel=\"self\"]"));
+		assertTrue(result.getFornecedor().toString().contains("links: [</api/fornecedor/1>;rel=\"self\"]"));
 		
 		assertEquals(1L, result.getFornecedor().getKey());
 		assertEquals(1.0, result.getValorTotal());
@@ -79,8 +79,8 @@ class ComprasServiceTest {
 		assertNotNull(compraUm.getKey());
 		assertNotNull(compraUm.getLinks());
 		assertNotNull(compraUm.getFornecedor().getLinks());
-		assertTrue(compraUm.toString().contains("links: [</compras/1>;rel=\"self\"]"));
-		assertTrue(compraUm.getFornecedor().toString().contains("links: [</fornecedor/1>;rel=\"self\"]"));
+		assertTrue(compraUm.toString().contains("links: [</api/compras/1>;rel=\"self\"]"));
+		assertTrue(compraUm.getFornecedor().toString().contains("links: [</api/fornecedor/1>;rel=\"self\"]"));
 		
 		assertEquals(1L, compraUm.getFornecedor().getKey());
 		assertEquals(1.0, compraUm.getValorTotal());
@@ -91,8 +91,8 @@ class ComprasServiceTest {
 		assertNotNull(compraCinco.getKey());
 		assertNotNull(compraCinco.getLinks());
 		assertNotNull(compraCinco.getFornecedor().getLinks());
-		assertTrue(compraCinco.toString().contains("links: [</compras/5>;rel=\"self\"]"));
-		assertTrue(compraCinco.getFornecedor().toString().contains("links: [</fornecedor/5>;rel=\"self\"]"));
+		assertTrue(compraCinco.toString().contains("links: [</api/compras/5>;rel=\"self\"]"));
+		assertTrue(compraCinco.getFornecedor().toString().contains("links: [</api/fornecedor/5>;rel=\"self\"]"));
 		
 		assertEquals(5L, compraCinco.getFornecedor().getKey());
 		assertEquals(5.0, compraCinco.getValorTotal());
@@ -103,8 +103,8 @@ class ComprasServiceTest {
 		assertNotNull(compraNove.getKey());
 		assertNotNull(compraNove.getLinks());
 		assertNotNull(compraNove.getFornecedor().getLinks());
-		assertTrue(compraNove.toString().contains("links: [</compras/9>;rel=\"self\"]"));
-		assertTrue(compraNove.getFornecedor().toString().contains("links: [</fornecedor/9>;rel=\"self\"]"));
+		assertTrue(compraNove.toString().contains("links: [</api/compras/9>;rel=\"self\"]"));
+		assertTrue(compraNove.getFornecedor().toString().contains("links: [</api/fornecedor/9>;rel=\"self\"]"));
 		
 		assertEquals(9L, compraNove.getFornecedor().getKey());
 		assertEquals(9.0, compraNove.getValorTotal());
@@ -129,8 +129,8 @@ class ComprasServiceTest {
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
 		assertNotNull(result.getFornecedor().getLinks());
-		assertTrue(result.toString().contains("links: [</compras/1>;rel=\"self\"]"));
-		assertTrue(result.getFornecedor().toString().contains("links: [</fornecedor/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/compras/1>;rel=\"self\"]"));
+		assertTrue(result.getFornecedor().toString().contains("links: [</api/fornecedor/1>;rel=\"self\"]"));
 		
 		assertEquals(1L, result.getFornecedor().getKey());
 		assertEquals(1.0, result.getValorTotal());
@@ -169,8 +169,8 @@ class ComprasServiceTest {
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
 		assertNotNull(result.getFornecedor().getLinks());
-		assertTrue(result.toString().contains("links: [</compras/1>;rel=\"self\"]"));
-		assertTrue(result.getFornecedor().toString().contains("links: [</fornecedor/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/compras/1>;rel=\"self\"]"));
+		assertTrue(result.getFornecedor().toString().contains("links: [</api/fornecedor/1>;rel=\"self\"]"));
 		
 		assertEquals(1L, result.getFornecedor().getKey());
 		assertEquals(1.0, result.getValorTotal());

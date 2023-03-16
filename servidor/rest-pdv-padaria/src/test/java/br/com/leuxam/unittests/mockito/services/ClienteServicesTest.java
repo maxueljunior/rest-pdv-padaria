@@ -55,7 +55,7 @@ class ClienteServicesTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</cliente/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/cliente/1>;rel=\"self\"]"));
 		
 		assertNotNull(result.getDataNascimento());
 		assertEquals("Endereço1", result.getEndereco());
@@ -80,7 +80,7 @@ class ClienteServicesTest {
 		
 		assertNotNull(clienteUm.getKey());
 		assertNotNull(clienteUm.getLinks());
-		assertTrue(clienteUm.toString().contains("links: [</cliente/1>;rel=\"self\"]"));
+		assertTrue(clienteUm.toString().contains("links: [</api/cliente/1>;rel=\"self\"]"));
 		
 		assertNotNull(clienteUm.getDataNascimento());
 		assertEquals("Endereço1", clienteUm.getEndereco());
@@ -94,7 +94,7 @@ class ClienteServicesTest {
 		
 		assertNotNull(clienteCinco.getKey());
 		assertNotNull(clienteCinco.getLinks());
-		assertTrue(clienteCinco.toString().contains("links: [</cliente/5>;rel=\"self\"]"));
+		assertTrue(clienteCinco.toString().contains("links: [</api/cliente/5>;rel=\"self\"]"));
 		
 		assertNotNull(clienteCinco.getDataNascimento());
 		assertEquals("Endereço5", clienteCinco.getEndereco());
@@ -108,7 +108,7 @@ class ClienteServicesTest {
 		
 		assertNotNull(clienteOito.getKey());
 		assertNotNull(clienteOito.getLinks());
-		assertTrue(clienteOito.toString().contains("links: [</cliente/8>;rel=\"self\"]"));
+		assertTrue(clienteOito.toString().contains("links: [</api/cliente/8>;rel=\"self\"]"));
 		
 		assertNotNull(clienteOito.getDataNascimento());
 		assertEquals("Endereço8", clienteOito.getEndereco());
@@ -134,7 +134,7 @@ class ClienteServicesTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</cliente/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/cliente/1>;rel=\"self\"]"));
 		
 		assertNotNull(result.getDataNascimento());
 		assertEquals("Endereço1", result.getEndereco());
@@ -173,7 +173,7 @@ class ClienteServicesTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</cliente/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/cliente/1>;rel=\"self\"]"));
 		
 		assertNotNull(result.getDataNascimento());
 		assertEquals("Endereço1", result.getEndereco());

@@ -5,7 +5,9 @@ import java.util.Objects;
 
 import br.com.leuxam.integrationtests.vo.EstoqueVO;
 import br.com.leuxam.integrationtests.vo.VendasVO;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 public class VendaEstoquePKVO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

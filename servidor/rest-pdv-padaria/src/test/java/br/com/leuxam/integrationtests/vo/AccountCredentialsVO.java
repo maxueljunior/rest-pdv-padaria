@@ -3,6 +3,9 @@ package br.com.leuxam.integrationtests.vo;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class AccountCredentialsVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -14,6 +17,8 @@ public class AccountCredentialsVO implements Serializable{
 		this.username = username;
 		this.password = password;
 	}
+	
+	public AccountCredentialsVO() {}
 
 	public String getUsername() {
 		return username;

@@ -6,8 +6,9 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.leuxam.integrationtests.pk.vo.VendaEstoquePKVO;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
-
+@XmlRootElement
 public class VendaEstoqueVO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

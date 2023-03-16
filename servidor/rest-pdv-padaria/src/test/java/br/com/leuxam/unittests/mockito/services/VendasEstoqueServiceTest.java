@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -25,7 +24,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.leuxam.data.vo.v1.VendaEstoqueVO;
 import br.com.leuxam.exceptions.RequiredObjectIsNullException;
-import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.model.VendaEstoque;
 import br.com.leuxam.model.Vendas;
 import br.com.leuxam.repositories.VendasEstoqueRepository;

@@ -8,6 +8,9 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class EstoqueVO implements Serializable{
 
 	private static final long serialVersionUID = 1L;

@@ -55,7 +55,7 @@ class FornecedorServiceTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</fornecedor/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/fornecedor/1>;rel=\"self\"]"));
 		
 		assertEquals("CNPJ1", result.getCnpj());
 		assertEquals("Contato1", result.getNomeDoContato());
@@ -78,7 +78,7 @@ class FornecedorServiceTest {
 		assertNotNull(fornecedorUm);
 		assertNotNull(fornecedorUm.getKey());
 		assertNotNull(fornecedorUm.getLinks());
-		assertTrue(fornecedorUm.toString().contains("links: [</fornecedor/1>;rel=\"self\"]"));
+		assertTrue(fornecedorUm.toString().contains("links: [</api/fornecedor/1>;rel=\"self\"]"));
 		
 		assertEquals("CNPJ1", fornecedorUm.getCnpj());
 		assertEquals("Contato1", fornecedorUm.getNomeDoContato());
@@ -90,7 +90,7 @@ class FornecedorServiceTest {
 		assertNotNull(fornecedorCinco);
 		assertNotNull(fornecedorCinco.getKey());
 		assertNotNull(fornecedorCinco.getLinks());
-		assertTrue(fornecedorCinco.toString().contains("links: [</fornecedor/5>;rel=\"self\"]"));
+		assertTrue(fornecedorCinco.toString().contains("links: [</api/fornecedor/5>;rel=\"self\"]"));
 		
 		assertEquals("CNPJ5", fornecedorCinco.getCnpj());
 		assertEquals("Contato5", fornecedorCinco.getNomeDoContato());
@@ -102,7 +102,7 @@ class FornecedorServiceTest {
 		assertNotNull(fornecedorNove);
 		assertNotNull(fornecedorNove.getKey());
 		assertNotNull(fornecedorNove.getLinks());
-		assertTrue(fornecedorNove.toString().contains("links: [</fornecedor/9>;rel=\"self\"]"));
+		assertTrue(fornecedorNove.toString().contains("links: [</api/fornecedor/9>;rel=\"self\"]"));
 		
 		assertEquals("CNPJ9", fornecedorNove.getCnpj());
 		assertEquals("Contato9", fornecedorNove.getNomeDoContato());
@@ -126,7 +126,7 @@ class FornecedorServiceTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</fornecedor/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/fornecedor/1>;rel=\"self\"]"));
 		
 		assertEquals("CNPJ1", result.getCnpj());
 		assertEquals("Contato1", result.getNomeDoContato());
@@ -164,7 +164,7 @@ class FornecedorServiceTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</fornecedor/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/fornecedor/1>;rel=\"self\"]"));
 		
 		assertEquals("CNPJ1", result.getCnpj());
 		assertEquals("Contato1", result.getNomeDoContato());

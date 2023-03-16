@@ -1,4 +1,4 @@
-package br.com.leuxam.integrationtests.controller.withjson;
+package br.com.leuxam.integrationtests.controller.cors.withjson;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +31,7 @@ import io.restassured.specification.RequestSpecification;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(OrderAnnotation.class)
-public class ClienteControllerJsonTest extends AbstractIntegrationTest{
+public class ClienteControllerCorsJsonTest extends AbstractIntegrationTest{
 	
 	private static RequestSpecification specification;
 	private static ObjectMapper objectMapper;
@@ -81,6 +81,7 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.body(cliente)
 				.when()
 					.post()
@@ -115,41 +116,23 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 	
 	@Test
 	@Order(2)
-	public void testUpdate() throws JsonProcessingException{
-		cliente.setNome("Ketlhyn");
+	public void testCreateWithWrongOrigin() throws JsonProcessingException{
+		mockCliente();
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
 					.body(cliente)
-				.when()
-					.put()
+					.when()
+					.post()
 				.then()
-					.statusCode(200)
+					.statusCode(403)
 				.extract()
 					.body()
 						.asString();
 		
-		ClienteVO createdCliente = objectMapper.readValue(content, ClienteVO.class);
-		cliente = createdCliente;
-		
-		assertNotNull(createdCliente);
-		assertNotNull(createdCliente.getId());
-		
-		assertNotNull(createdCliente.getDataNascimento());
-		assertNotNull(createdCliente.getEndereco());
-		assertNotNull(createdCliente.getLucratividade());
-		assertNotNull(createdCliente.getNome());
-		assertNotNull(createdCliente.getSexo());
-		assertNotNull(createdCliente.getSobrenome());
-		assertNotNull(createdCliente.getTelefone());
-		assertEquals(cliente.getId(), createdCliente.getId());
-		
-		assertEquals("Rua Silvio Jose Sarti", createdCliente.getEndereco());
-		assertEquals(1.0, createdCliente.getLucratividade());
-		assertEquals("Ketlhyn", createdCliente.getNome());
-		assertEquals("H", createdCliente.getSexo());
-		assertEquals("Junior", createdCliente.getSobrenome());
-		assertEquals("16992326161", createdCliente.getTelefone());
+		assertNotNull(content);
+		assertEquals("Invalid CORS request", content);
 	}
 	
 	@Test
@@ -159,6 +142,7 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.pathParam("id", cliente.getId())
 					.when()
 					.get("{id}")
@@ -181,15 +165,36 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 		assertNotNull(persistedCliente.getSexo());
 		assertNotNull(persistedCliente.getSobrenome());
 		assertNotNull(persistedCliente.getTelefone());
-		
-		assertEquals(cliente.getId(), persistedCliente.getId());
+		assertTrue(persistedCliente.getId() > 0);
 		
 		assertEquals("Rua Silvio Jose Sarti", persistedCliente.getEndereco());
 		assertEquals(1.0, persistedCliente.getLucratividade());
-		assertEquals("Ketlhyn", persistedCliente.getNome());
+		assertEquals("Maxuel", persistedCliente.getNome());
 		assertEquals("H", persistedCliente.getSexo());
 		assertEquals("Junior", persistedCliente.getSobrenome());
 		assertEquals("16992326161", persistedCliente.getTelefone());
+	}
+
+	
+	@Test
+	@Order(4)
+	public void testFindByIdWithWrongOrigin() throws JsonProcessingException{
+		mockCliente();
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
+					.pathParam("id", cliente.getId())
+					.when()
+					.get("{id}")
+				.then()
+					.statusCode(403)
+				.extract()
+					.body()
+						.asString();
+		
+		assertNotNull(content);
+		assertEquals("Invalid CORS request", content);
 	}
 
 	private void mockCliente() {

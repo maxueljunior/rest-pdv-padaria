@@ -55,7 +55,7 @@ class EstoqueServiceTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</produto/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/produto/1>;rel=\"self\"]"));
 		
 		assertNotNull(result.getDataCompra());
 		assertNotNull(result.getDataValidade());
@@ -79,7 +79,7 @@ class EstoqueServiceTest {
 		assertNotNull(estoqueUm);
 		assertNotNull(estoqueUm.getKey());
 		assertNotNull(estoqueUm.getLinks());
-		assertTrue(estoqueUm.toString().contains("links: [</produto/1>;rel=\"self\"]"));
+		assertTrue(estoqueUm.toString().contains("links: [</api/produto/1>;rel=\"self\"]"));
 		
 		assertNotNull(estoqueUm.getDataCompra());
 		assertNotNull(estoqueUm.getDataValidade());
@@ -92,7 +92,7 @@ class EstoqueServiceTest {
 		assertNotNull(estoqueCinco);
 		assertNotNull(estoqueCinco.getKey());
 		assertNotNull(estoqueCinco.getLinks());
-		assertTrue(estoqueCinco.toString().contains("links: [</produto/5>;rel=\"self\"]"));
+		assertTrue(estoqueCinco.toString().contains("links: [</api/produto/5>;rel=\"self\"]"));
 		
 		assertNotNull(estoqueCinco.getDataCompra());
 		assertNotNull(estoqueCinco.getDataValidade());
@@ -105,7 +105,7 @@ class EstoqueServiceTest {
 		assertNotNull(estoqueNove);
 		assertNotNull(estoqueNove.getKey());
 		assertNotNull(estoqueNove.getLinks());
-		assertTrue(estoqueNove.toString().contains("links: [</produto/9>;rel=\"self\"]"));
+		assertTrue(estoqueNove.toString().contains("links: [</api/produto/9>;rel=\"self\"]"));
 		
 		assertNotNull(estoqueNove.getDataCompra());
 		assertNotNull(estoqueNove.getDataValidade());
@@ -131,7 +131,7 @@ class EstoqueServiceTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</produto/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/produto/1>;rel=\"self\"]"));
 		
 		assertNotNull(result.getDataCompra());
 		assertNotNull(result.getDataValidade());
@@ -169,7 +169,7 @@ class EstoqueServiceTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</produto/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/produto/1>;rel=\"self\"]"));
 		
 		assertNotNull(result.getDataCompra());
 		assertNotNull(result.getDataValidade());

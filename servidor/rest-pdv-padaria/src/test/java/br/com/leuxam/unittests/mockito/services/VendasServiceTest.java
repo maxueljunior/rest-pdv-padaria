@@ -2,7 +2,6 @@ package br.com.leuxam.unittests.mockito.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -22,8 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.leuxam.data.vo.v1.VendasVO;
 import br.com.leuxam.exceptions.RequiredObjectIsNullException;
-import br.com.leuxam.model.Cliente;
-import br.com.leuxam.model.Cliente;
 import br.com.leuxam.model.Vendas;
 import br.com.leuxam.repositories.VendasRepository;
 import br.com.leuxam.services.VendasService;
@@ -58,8 +55,8 @@ class VendasServiceTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</vendas/1>;rel=\"self\"]"));
-		assertTrue(result.getCliente().toString().contains("links: [</cliente/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/vendas/1>;rel=\"self\"]"));
+		assertTrue(result.getCliente().toString().contains("links: [</api/cliente/1>;rel=\"self\"]"));
 		
 		assertNotNull(result.getCliente());
 		assertNotNull(result.getCondicaoPagamento());
@@ -82,8 +79,8 @@ class VendasServiceTest {
 		assertNotNull(listaVendasUm);
 		assertNotNull(listaVendasUm.getKey());
 		assertNotNull(listaVendasUm.getLinks());
-		assertTrue(listaVendasUm.toString().contains("links: [</vendas/1>;rel=\"self\"]"));
-		assertTrue(listaVendasUm.getCliente().toString().contains("links: [</cliente/1>;rel=\"self\"]"));
+		assertTrue(listaVendasUm.toString().contains("links: [</api/vendas/1>;rel=\"self\"]"));
+		assertTrue(listaVendasUm.getCliente().toString().contains("links: [</api/cliente/1>;rel=\"self\"]"));
 		
 		assertNotNull(listaVendasUm.getCliente());
 		assertNotNull(listaVendasUm.getCondicaoPagamento());
@@ -95,8 +92,8 @@ class VendasServiceTest {
 		assertNotNull(listaVendasCinco);
 		assertNotNull(listaVendasCinco.getKey());
 		assertNotNull(listaVendasCinco.getLinks());
-		assertTrue(listaVendasCinco.toString().contains("links: [</vendas/5>;rel=\"self\"]"));
-		assertTrue(listaVendasCinco.getCliente().toString().contains("links: [</cliente/5>;rel=\"self\"]"));
+		assertTrue(listaVendasCinco.toString().contains("links: [</api/vendas/5>;rel=\"self\"]"));
+		assertTrue(listaVendasCinco.getCliente().toString().contains("links: [</api/cliente/5>;rel=\"self\"]"));
 		
 		assertNotNull(listaVendasCinco.getCliente());
 		assertNotNull(listaVendasCinco.getCondicaoPagamento());
@@ -108,8 +105,8 @@ class VendasServiceTest {
 		assertNotNull(listaVendasNove);
 		assertNotNull(listaVendasNove.getKey());
 		assertNotNull(listaVendasNove.getLinks());
-		assertTrue(listaVendasNove.toString().contains("links: [</vendas/9>;rel=\"self\"]"));
-		assertTrue(listaVendasNove.getCliente().toString().contains("links: [</cliente/9>;rel=\"self\"]"));
+		assertTrue(listaVendasNove.toString().contains("links: [</api/vendas/9>;rel=\"self\"]"));
+		assertTrue(listaVendasNove.getCliente().toString().contains("links: [</api/cliente/9>;rel=\"self\"]"));
 		
 		assertNotNull(listaVendasNove.getCliente());
 		assertNotNull(listaVendasNove.getCondicaoPagamento());
@@ -133,8 +130,8 @@ class VendasServiceTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</vendas/1>;rel=\"self\"]"));
-		assertTrue(result.getCliente().toString().contains("links: [</cliente/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/vendas/1>;rel=\"self\"]"));
+		assertTrue(result.getCliente().toString().contains("links: [</api/cliente/1>;rel=\"self\"]"));
 		
 		assertNotNull(result.getCliente());
 		assertNotNull(result.getCondicaoPagamento());
@@ -171,8 +168,8 @@ class VendasServiceTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</vendas/1>;rel=\"self\"]"));
-		assertTrue(result.getCliente().toString().contains("links: [</cliente/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/vendas/1>;rel=\"self\"]"));
+		assertTrue(result.getCliente().toString().contains("links: [</api/cliente/1>;rel=\"self\"]"));
 		
 		assertNotNull(result.getCliente());
 		assertNotNull(result.getCondicaoPagamento());
