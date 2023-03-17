@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -24,6 +26,7 @@ import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ClienteVO;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -81,6 +84,7 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.body(cliente)
 				.when()
 					.post()
@@ -120,6 +124,7 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.body(cliente)
 				.when()
 					.put()
@@ -155,10 +160,10 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 	@Test
 	@Order(3)
 	public void testFindById() throws JsonProcessingException{
-		mockCliente();
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.pathParam("id", cliente.getId())
 					.when()
 					.get("{id}")
@@ -191,7 +196,82 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 		assertEquals("Junior", persistedCliente.getSobrenome());
 		assertEquals("16992326161", persistedCliente.getTelefone());
 	}
-
+	
+	@Test
+	@Order(4)
+	public void testDelete() throws JsonProcessingException{
+		
+		given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.pathParam("id", cliente.getId())
+					.when()
+					.delete("{id}")
+				.then()
+					.statusCode(204);
+	}
+	
+	@Test
+	@Order(5)
+	public void testFindAll() throws JsonProcessingException{
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+				.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		List<ClienteVO> clientes = objectMapper.readValue(content, new TypeReference<List<ClienteVO>>() {});
+		ClienteVO foundClienteUm = clientes.get(0);
+		
+		assertEquals(1, foundClienteUm.getId());
+		
+		assertEquals("8241 Ridgeway Plaza", foundClienteUm.getEndereco());
+		assertEquals(81, foundClienteUm.getLucratividade());
+		assertEquals("Bernice", foundClienteUm.getNome());
+		assertEquals("F", foundClienteUm.getSexo());
+		assertEquals("Cade", foundClienteUm.getSobrenome());
+		assertEquals("00-34731-8780", foundClienteUm.getTelefone());
+		
+		ClienteVO foundClienteSete = clientes.get(6);
+		
+		assertEquals(7, foundClienteSete.getId());
+		
+		assertEquals("3852 Moland Junction", foundClienteSete.getEndereco());
+		assertEquals(82, foundClienteSete.getLucratividade());
+		assertEquals("Mickie", foundClienteSete.getNome());
+		assertEquals("F", foundClienteSete.getSexo());
+		assertEquals("Stirley", foundClienteSete.getSobrenome());
+		assertEquals("85-85089-1044", foundClienteSete.getTelefone());
+	}
+	
+	@Test
+	@Order(6)
+	public void testFindAllWithNotAuthorized() throws JsonProcessingException{
+		
+		RequestSpecification specificationWithNotAuthorized = specification = new RequestSpecBuilder()
+				.setBasePath("/api/cliente")
+				.setPort(TestConfigs.SERVER_PORT)
+					.addFilter(new RequestLoggingFilter(LogDetail.ALL))
+					.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+				.build();
+		
+		given().spec(specificationWithNotAuthorized)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+				.when()
+					.get()
+				.then()
+					.statusCode(403)
+				.extract()
+					.body()
+						.asString();
+	}
+	
 	private void mockCliente() {
 		cliente.setDataNascimento(new Date());
 		cliente.setEndereco("Rua Silvio Jose Sarti");

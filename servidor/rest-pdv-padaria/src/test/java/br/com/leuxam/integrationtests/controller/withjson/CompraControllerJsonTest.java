@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -106,29 +109,37 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 	
 	@Test
 	@Order(2)
-	public void testCreateWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
-		mockCompras();
+	public void testUpdate() throws JsonMappingException, JsonProcessingException {
+		compras.setValorTotal(50.0);
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.body(compras)
 					.when()
-					.post()
+					.put()
 				.then()
-					.statusCode(403)
+					.statusCode(200)
 				.extract()
 					.body()
 						.asString();
 		
-		assertNotNull(content);
-		assertEquals("Invalid CORS request", content);
+		ComprasVO createdCompras = objectMapper.readValue(content, ComprasVO.class);
+		compras = createdCompras;
+		
+		assertNotNull(createdCompras);
+		assertNotNull(createdCompras.getId());
+		assertNotNull(createdCompras.getFornecedor());
+		
+		assertEquals(compras.getId(), createdCompras.getId());
+		assertTrue(createdCompras.getFornecedor().getId() > 0);
+		assertEquals(50.0, createdCompras.getValorTotal());
+		
 	}
 	
 	@Test
 	@Order(3)
-	public void findById() throws JsonMappingException, JsonProcessingException {
-		mockCompras();
+	public void testfindById() throws JsonMappingException, JsonProcessingException {
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
@@ -151,29 +162,75 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 		
 		assertTrue(persistedCompras.getId() > 0);
 		assertTrue(persistedCompras.getFornecedor().getId() > 0);
-		assertEquals(100.0, persistedCompras.getValorTotal());
+		assertEquals(50.0, persistedCompras.getValorTotal());
 	}
-
 	
 	@Test
 	@Order(4)
-	public void findByIdWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
-		mockCompras();
+	public void testDelete() throws JsonMappingException, JsonProcessingException {
+		
+		given().spec(specification)
+			.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.pathParam("id", compras.getId())
+				.when()
+				.delete("{id}")
+			.then()
+				.statusCode(204);
+		
+	}
+	
+	@Test
+	@Order(5)
+	public void testFindAll() throws JsonMappingException, JsonProcessingException {
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
-					.pathParam("id", compras.getId())
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
-					.get("{id}")
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		List<ComprasVO> compras = objectMapper.readValue(content, new TypeReference<List<ComprasVO>>() {});
+
+		ComprasVO findComprasUm = compras.get(0);
+		
+		assertEquals(1, findComprasUm.getId());
+		assertEquals(1, findComprasUm.getFornecedor().getId());
+		assertEquals(300.0, findComprasUm.getValorTotal());
+		
+		ComprasVO findComprasDois = compras.get(1);
+		
+		assertEquals(2, findComprasDois.getId());
+		assertEquals(50, findComprasDois.getFornecedor().getId());
+		assertEquals(534.5, findComprasDois.getValorTotal());
+		
+	}
+	
+	@Test
+	@Order(5)
+	public void testFindAllWithNotAuthorized() throws JsonMappingException, JsonProcessingException {
+		
+		RequestSpecification specificationWithNotAuthorized = new RequestSpecBuilder()
+				.setBasePath("/api/compras")
+				.setPort(TestConfigs.SERVER_PORT)
+					.addFilter(new RequestLoggingFilter(LogDetail.ALL))
+					.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+				.build();
+		
+		given().spec(specificationWithNotAuthorized)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.when()
+					.get()
 				.then()
 					.statusCode(403)
 				.extract()
 					.body()
 						.asString();
-		
-		assertNotNull(content);
-		assertEquals("Invalid CORS request", content);
 	}
 	
 	private void mockCompras() {

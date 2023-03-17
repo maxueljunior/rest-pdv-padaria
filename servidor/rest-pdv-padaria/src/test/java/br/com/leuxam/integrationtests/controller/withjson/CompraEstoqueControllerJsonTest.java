@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -106,26 +109,93 @@ public class CompraEstoqueControllerJsonTest extends AbstractIntegrationTest{
 		assertEquals(2.0, persistedCompraEstoque.getQuantidade());
 		
 	}
-
+	
 	@Test
 	@Order(2)
-	public void testCreateWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
-		mockCompraEstoque();
+	public void testFindByIdCompras() throws JsonMappingException, JsonProcessingException {
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
-					.body(compraEstoque)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.queryParam("id", compraEstoque.getCompras().getId(), "table", "compras")
 					.when()
-					.post()
+					.get()
 				.then()
-					.statusCode(403)
+					.statusCode(200)
 				.extract()
 					.body()
 						.asString();
-		assertNotNull(content);
-		assertEquals("Invalid CORS request", content);
+		
+		List<CompraEstoqueVO> comprasEstoques = objectMapper.readValue(content, new TypeReference<List<CompraEstoqueVO>>() {});
+		
+		CompraEstoqueVO compraEstoqueUm = comprasEstoques.get(0);
+		
+		assertTrue(compraEstoqueUm.getEstoque().getId() > 0);
+		assertEquals(compraEstoque.getCompras().getId(), compraEstoqueUm.getCompras().getId());
+		
+		assertEquals(1.0, compraEstoqueUm.getPreco());
+		assertEquals(2.0, compraEstoqueUm.getQuantidade());
 	}
+	
+	@Test
+	@Order(3)
+	public void testFindByIdProduto() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.queryParam("id", compraEstoque.getEstoque().getId(), "table", "produto")
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		List<CompraEstoqueVO> comprasEstoques = objectMapper.readValue(content, new TypeReference<List<CompraEstoqueVO>>() {});
+		
+		CompraEstoqueVO compraEstoqueUm = comprasEstoques.get(0);
+		
+		assertEquals(compraEstoque.getEstoque().getId() ,compraEstoqueUm.getEstoque().getId());
+		assertTrue(compraEstoqueUm.getCompras().getId() > 0);
+		
+		assertEquals(1.0, compraEstoqueUm.getPreco());
+		assertEquals(2.0, compraEstoqueUm.getQuantidade());
+	}
+	
+	@Test
+	@Order(4)
+	public void testUpdate() throws JsonMappingException, JsonProcessingException {
+		compraEstoque.setQuantidade(100.0);
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.body(compraEstoque)
+					.when()
+					.put()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		CompraEstoqueVO persistedCompraEstoque = objectMapper.readValue(content, CompraEstoqueVO.class);
+		compraEstoque = persistedCompraEstoque;
+		
+		assertNotNull(persistedCompraEstoque);
+		assertNotNull(persistedCompraEstoque.getCompras());
+		assertNotNull(persistedCompraEstoque.getEstoque());
+		assertNotNull(persistedCompraEstoque.getPreco());
+		assertNotNull(persistedCompraEstoque.getQuantidade());
+		assertTrue(persistedCompraEstoque.getEstoque().getId() > 0);
+		assertTrue(persistedCompraEstoque.getCompras().getId() > 0);
+		
+		assertEquals(1.0, persistedCompraEstoque.getPreco());
+		assertEquals(100.0, persistedCompraEstoque.getQuantidade());
+	}
+
 
 	private void mockCompraEstoque() {
 		ComprasVO compras = new ComprasVO(1L, null, null);
