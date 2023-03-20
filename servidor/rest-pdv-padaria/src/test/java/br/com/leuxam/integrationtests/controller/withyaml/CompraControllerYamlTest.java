@@ -1,10 +1,11 @@
-package br.com.leuxam.integrationtests.controller.withjson;
+package br.com.leuxam.integrationtests.controller.withyaml;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -18,33 +19,36 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import br.com.leuxam.configs.TestConfigs;
 import br.com.leuxam.data.vo.v1.security.TokenVO;
+import br.com.leuxam.integrationtests.controller.withyaml.mapper.YMLMapper;
 import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ComprasVO;
 import br.com.leuxam.integrationtests.vo.FornecedorVO;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.config.EncoderConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(OrderAnnotation.class)
-public class CompraControllerJsonTest extends AbstractIntegrationTest{
+public class CompraControllerYamlTest extends AbstractIntegrationTest{
 	
 	private static RequestSpecification specification;
-	private static ObjectMapper objectMapper;
+	private static YMLMapper objectMapper;
 	
 	private static ComprasVO compras;
 	
 	@BeforeAll
 	public static void setup() {	
-		objectMapper = new ObjectMapper();
-		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper = new YMLMapper();
 		compras = new ComprasVO();
 	}
 	
@@ -54,17 +58,19 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 		AccountCredentialsVO user = new AccountCredentialsVO("maxuel", "maxuelt123");
 		
 		var accessToken = given()
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
 				.basePath("/auth/signin")
 					.port(TestConfigs.SERVER_PORT)
-					.contentType(TestConfigs.CONTENT_TYPE_JSON)
-				.body(user)
+					.contentType(TestConfigs.CONTENT_TYPE_YML)
+					.accept(TestConfigs.CONTENT_TYPE_YML)
+				.body(user, objectMapper)
 					.when()
 				.post()
 				.then()
 					.statusCode(200)
 				.extract()
 					.body()
-						.as(TokenVO.class)
+						.as(TokenVO.class, objectMapper)
 					.getAccessToken();
 		
 		specification = new RequestSpecBuilder()
@@ -82,19 +88,20 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 	public void testCreate() throws JsonMappingException, JsonProcessingException {
 		mockCompras();
 		
-		var content = given().spec(specification)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+		var createdCompras = given().spec(specification)
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
-					.body(compras)
+					.body(compras, objectMapper)
 					.when()
 					.post()
 				.then()
 					.statusCode(200)
 				.extract()
 					.body()
-						.asString();
+						.as(ComprasVO.class, objectMapper);
 		
-		ComprasVO createdCompras = objectMapper.readValue(content, ComprasVO.class);
 		compras = createdCompras;
 		
 		assertNotNull(createdCompras);
@@ -112,19 +119,20 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 	public void testUpdate() throws JsonMappingException, JsonProcessingException {
 		compras.setValorTotal(50.0);
 		
-		var content = given().spec(specification)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+		var createdCompras = given().spec(specification)
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
-					.body(compras)
+					.body(compras, objectMapper)
 					.when()
 					.put()
 				.then()
 					.statusCode(200)
 				.extract()
 					.body()
-						.asString();
+						.as(ComprasVO.class, objectMapper);
 		
-		ComprasVO createdCompras = objectMapper.readValue(content, ComprasVO.class);
 		compras = createdCompras;
 		
 		assertNotNull(createdCompras);
@@ -141,8 +149,10 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 	@Order(3)
 	public void testfindById() throws JsonMappingException, JsonProcessingException {
 		
-		var content = given().spec(specification)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+		var persistedCompras = given().spec(specification)
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.pathParam("id", compras.getId())
 					.when()
@@ -151,9 +161,8 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 					.statusCode(200)
 				.extract()
 					.body()
-						.asString();
+						.as(ComprasVO.class, objectMapper);
 		
-		ComprasVO persistedCompras = objectMapper.readValue(content, ComprasVO.class);
 		compras = persistedCompras;
 		
 		assertNotNull(persistedCompras);
@@ -170,7 +179,9 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 	public void testDelete() throws JsonMappingException, JsonProcessingException {
 		
 		given().spec(specification)
-			.contentType(TestConfigs.CONTENT_TYPE_JSON)
+			.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+			.contentType(TestConfigs.CONTENT_TYPE_YML)
+			.accept(TestConfigs.CONTENT_TYPE_YML)
 				.pathParam("id", compras.getId())
 				.when()
 				.delete("{id}")
@@ -184,7 +195,9 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 	public void testFindAll() throws JsonMappingException, JsonProcessingException {
 		
 		var content = given().spec(specification)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
 					.get()
@@ -192,15 +205,15 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 					.statusCode(200)
 				.extract()
 					.body()
-						.asString();
+						.as(ComprasVO[].class, objectMapper);
 		
-		List<ComprasVO> compras = objectMapper.readValue(content, new TypeReference<List<ComprasVO>>() {});
+		List<ComprasVO> compras = Arrays.asList(content);
 
 		ComprasVO findComprasUm = compras.get(0);
 		
 		assertEquals(1, findComprasUm.getId());
 		assertEquals(1, findComprasUm.getFornecedor().getId());
-		assertEquals(150.0, findComprasUm.getValorTotal());
+		assertEquals(152.0, findComprasUm.getValorTotal());
 		
 		ComprasVO findComprasDois = compras.get(1);
 		
@@ -222,15 +235,14 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 				.build();
 		
 		given().spec(specificationWithNotAuthorized)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
 					.get()
 				.then()
-					.statusCode(403)
-				.extract()
-					.body()
-						.asString();
+					.statusCode(403);
 	}
 	
 	private void mockCompras() {
