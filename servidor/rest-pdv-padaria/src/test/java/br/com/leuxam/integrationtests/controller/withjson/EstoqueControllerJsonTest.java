@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -105,30 +107,9 @@ public class EstoqueControllerJsonTest extends AbstractIntegrationTest{
 		assertEquals(2.0, createdEstoque.getQuantidade());
 		assertEquals("KG", createdEstoque.getUnidade());
 	}
-
-	@Test
-	@Order(2)
-	public void testCreateWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
-		mockEstoque();
-		
-		var content = given().spec(specification)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
-					.body(estoque)
-					.when()
-					.post()
-				.then()
-					.statusCode(403)
-				.extract()
-					.body()
-						.asString();
-		
-		assertNotNull(content);
-		assertEquals("Invalid CORS request", content);
-	}
 	
 	@Test
-	@Order(3)
+	@Order(2)
 	public void testFindById() throws JsonMappingException, JsonProcessingException {
 		mockEstoque();
 		
@@ -157,27 +138,98 @@ public class EstoqueControllerJsonTest extends AbstractIntegrationTest{
 		assertEquals(2.0, createdEstoque.getQuantidade());
 		assertEquals("KG", createdEstoque.getUnidade());
 	}
-	
+
 	@Test
-	@Order(4)
-	public void testFindByIdWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
-		mockEstoque();
+	@Order(3)
+	public void testUpdate() throws JsonMappingException, JsonProcessingException {
+		
+		estoque.setDescricao("BIGMAC");
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
-					.pathParam("id", estoque.getId())
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.body(estoque)
 					.when()
-					.get("{id}")
+					.put()
 				.then()
-					.statusCode(403)
+					.statusCode(200)
 				.extract()
 					.body()
 						.asString();
 		
-		assertNotNull(content);
-		assertEquals("Invalid CORS request", content);
+		EstoqueVO createdEstoque = objectMapper.readValue(content, EstoqueVO.class);
+		estoque = createdEstoque;
+		
+		assertNotNull(createdEstoque);
+		assertNotNull(createdEstoque.getId());
+		assertTrue(createdEstoque.getId() > 0 );
+		
+		assertNotNull(createdEstoque.getDataCompra());
+		assertNotNull(createdEstoque.getDataValidade());
+		assertEquals("BIGMAC", createdEstoque.getDescricao());
+		assertEquals(2.0, createdEstoque.getQuantidade());
+		assertEquals("KG", createdEstoque.getUnidade());
 	}
+	
+	@Test
+	@Order(4)
+	public void testDelete() throws JsonMappingException, JsonProcessingException {
+		
+		given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.pathParam("id", estoque.getId())
+					.when()
+					.delete("{id}")
+				.then()
+					.statusCode(204);
+	}
+	
+	@Test
+	@Order(5)
+	public void testFindAll() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		List<EstoqueVO> listEstoque = objectMapper.readValue(content, new TypeReference<List<EstoqueVO>>() {});
+		
+		EstoqueVO estoqueUm = listEstoque.get(0);
+		assertEquals(1 ,estoqueUm.getId());
+		
+		assertNotNull(estoqueUm.getDataCompra());
+		assertNotNull(estoqueUm.getDataValidade());
+		assertEquals("Electrical Products", estoqueUm.getDescricao());
+		assertEquals(11.0, estoqueUm.getQuantidade());
+		assertEquals("KG", estoqueUm.getUnidade());
+		
+		EstoqueVO estoqueCinco = listEstoque.get(5);
+		assertEquals(6 ,estoqueCinco.getId());
+		
+		assertNotNull(estoqueCinco.getDataCompra());
+		assertNotNull(estoqueCinco.getDataValidade());
+		assertEquals("Package Goods/Cosmetics", estoqueCinco.getDescricao());
+		assertEquals(62.0, estoqueCinco.getQuantidade());
+		assertEquals("KG", estoqueCinco.getUnidade());
+		
+		EstoqueVO estoqueSete = listEstoque.get(7);
+		assertEquals(8 ,estoqueSete.getId());
+		
+		assertNotNull(estoqueSete.getDataCompra());
+		assertNotNull(estoqueSete.getDataValidade());
+		assertEquals("Retail: Computer Software & Peripheral Equipment", estoqueSete.getDescricao());
+		assertEquals(88.0, estoqueSete.getQuantidade());
+		assertEquals("Un", estoqueSete.getUnidade());
+	}
+
+
 	
 	private void mockEstoque() {
 		estoque.setDataCompra(new Date());

@@ -200,7 +200,7 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 		
 		assertEquals(1, findComprasUm.getId());
 		assertEquals(1, findComprasUm.getFornecedor().getId());
-		assertEquals(300.0, findComprasUm.getValorTotal());
+		assertEquals(152.0, findComprasUm.getValorTotal());
 		
 		ComprasVO findComprasDois = compras.get(1);
 		

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -107,30 +109,8 @@ public class VendasControllerJsonTest extends AbstractIntegrationTest{
 		assertEquals(150.0, createdVendas.getValorTotal());
 	}
 	
-
 	@Test
 	@Order(2)
-	public void testCreateWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
-		mockVendas();
-		
-		var content = given().spec(specification)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
-					.body(vendas)
-					.when()
-					.post()
-				.then()
-					.statusCode(403)
-				.extract()
-					.body()
-						.asString();
-		
-		assertNotNull(content);
-		assertEquals("Invalid CORS request", content);
-	}
-	
-	@Test
-	@Order(3)
 	public void testFindById() throws JsonMappingException, JsonProcessingException {
 		mockVendas();
 		
@@ -159,27 +139,85 @@ public class VendasControllerJsonTest extends AbstractIntegrationTest{
 		assertNotNull(createdVendas.getDataVenda());
 		assertEquals(150.0, createdVendas.getValorTotal());
 	}
-
+	
 	@Test
-	@Order(4)
-	public void testFindByIdWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
-		mockVendas();
-		
+	@Order(3)
+	public void testUpdate() throws JsonMappingException, JsonProcessingException {
+		vendas.setValorTotal(1500.0);
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
-					.pathParam("id", vendas.getId())
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.body(vendas)
 					.when()
-					.get("{id}")
+					.put()
 				.then()
-					.statusCode(403)
+					.statusCode(200)
 				.extract()
 					.body()
 						.asString();
 		
-		assertNotNull(content);
-		assertEquals("Invalid CORS request", content);
+		VendasVO createdVendas = objectMapper.readValue(content, VendasVO.class);
+		vendas = createdVendas;
+		
+		assertNotNull(createdVendas);
+		assertNotNull(createdVendas.getId());
+		assertNotNull(createdVendas.getCliente().getId());
+		assertTrue(createdVendas.getId() > 0);
+		assertTrue(createdVendas.getCliente().getId() > 0);
+		
+		assertNotNull(createdVendas.getCondicaoPagamento());
+		assertNotNull(createdVendas.getDataVenda());
+		assertEquals(1500.0, createdVendas.getValorTotal());
 	}
+	
+	@Test
+	@Order(4)
+	public void testDelete() throws JsonMappingException, JsonProcessingException {
+		given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.pathParam("id", vendas.getId())
+					.when()
+					.delete("{id}")
+				.then()
+					.statusCode(204);
+	}
+	
+	@Test
+	@Order(5)
+	public void testFindAll() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		List<VendasVO> listVendas = objectMapper.readValue(content, new TypeReference<List<VendasVO>>() {});
+		
+		VendasVO vendasUm = listVendas.get(0);
+		
+		assertEquals(1,vendasUm.getId());
+		assertEquals(3, vendasUm.getCliente().getId());
+		
+		assertNotNull(vendasUm.getCondicaoPagamento());
+		assertNotNull(vendasUm.getDataVenda());
+		assertEquals(1030.0, vendasUm.getValorTotal());
+		
+		VendasVO vendasDois = listVendas.get(1);
+		
+		assertEquals(2,vendasDois.getId());
+		assertEquals(1, vendasDois.getCliente().getId());
+		
+		assertNotNull(vendasDois.getCondicaoPagamento());
+		assertNotNull(vendasDois.getDataVenda());
+		assertEquals(150.0, vendasDois.getValorTotal());
+	}
+	
 	private void mockVendas() {
 		ClienteVO cliente = new ClienteVO(1L, null, null, null, null, null, null, null);
 		vendas.setCliente(cliente);

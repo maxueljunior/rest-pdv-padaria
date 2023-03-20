@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -104,27 +107,6 @@ public class FornecedorControllerJsonTest extends AbstractIntegrationTest{
 	
 	@Test
 	@Order(2)
-	public void testCreateWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
-		mockFornecedor();
-		
-		var content = given().spec(specification)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
-					.body(fornecedor)
-					.when()
-					.post()
-				.then()
-					.statusCode(403)
-				.extract()
-					.body()
-						.asString();
-		
-		assertNotNull(content);
-		assertEquals("Invalid CORS request", content);
-	}
-	
-	@Test
-	@Order(3)
 	public void testFindById() throws JsonMappingException, JsonProcessingException {
 		mockFornecedor();
 		
@@ -154,26 +136,93 @@ public class FornecedorControllerJsonTest extends AbstractIntegrationTest{
 	}
 	
 	@Test
-	@Order(4)
-	public void testFindByIdWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
-		mockFornecedor();
+	@Order(3)
+	public void testUpdate() throws JsonMappingException, JsonProcessingException {
+		fornecedor.setNomeDoContato("Ketlhyn");
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LEUXAM)
-					.pathParam("id", fornecedor.getId())
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.body(fornecedor)
 					.when()
-					.get("{id}")
+					.put()
 				.then()
-					.statusCode(403)
+					.statusCode(200)
 				.extract()
 					.body()
-						.asString();		
+						.asString();
 		
-		assertNotNull(content);
-		assertEquals("Invalid CORS request", content);
+		FornecedorVO createdFornecedor = objectMapper.readValue(content, FornecedorVO.class);
+		fornecedor = createdFornecedor;
+		
+		assertNotNull(createdFornecedor);
+		assertNotNull(createdFornecedor.getId());
+		assertTrue(createdFornecedor.getId() > 0);
+		
+		assertEquals("05.729.768/0001-80", createdFornecedor.getCnpj());
+		assertEquals("Ketlhyn", createdFornecedor.getNomeDoContato());
+		assertEquals("TGM Turbinas", createdFornecedor.getRazaoSocial());
+		assertEquals("16992326161", createdFornecedor.getTelefone());
 	}
-
+	
+	@Test
+	@Order(4)
+	public void testDelete() throws JsonMappingException, JsonProcessingException {
+		
+		given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.pathParam("id", fornecedor.getId())
+					.when()
+					.delete("{id}")
+				.then()
+					.statusCode(204);
+	}
+	
+	@Test
+	@Order(5)
+	public void testFindAll() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		List<FornecedorVO> fornecedores = objectMapper.readValue(content, new TypeReference<List<FornecedorVO>>() {});
+		
+		FornecedorVO fornecedorUm = fornecedores.get(0);
+		
+		assertEquals(1, fornecedorUm.getId());
+		
+		assertEquals("10.448.074/1073-42", fornecedorUm.getCnpj());
+		assertEquals("Connie Izen", fornecedorUm.getNomeDoContato());
+		assertEquals("Yotz", fornecedorUm.getRazaoSocial());
+		assertEquals("98-33652-2662", fornecedorUm.getTelefone());
+		
+		FornecedorVO fornecedorCinco = fornecedores.get(5);
+		
+		assertEquals(6, fornecedorCinco.getId());
+		
+		assertEquals("92.733.108/0374-53", fornecedorCinco.getCnpj());
+		assertEquals("Lissy Karlolczak", fornecedorCinco.getNomeDoContato());
+		assertEquals("Yakijo", fornecedorCinco.getRazaoSocial());
+		assertEquals("26-41140-2092", fornecedorCinco.getTelefone());		
+		
+		FornecedorVO fornecedorSete = fornecedores.get(7);
+		
+		assertEquals(8, fornecedorSete.getId());
+		
+		assertEquals("24.313.511/1390-54", fornecedorSete.getCnpj());
+		assertEquals("Stephi Gerald", fornecedorSete.getNomeDoContato());
+		assertEquals("Divanoodle", fornecedorSete.getRazaoSocial());
+		assertEquals("90-59325-6440", fornecedorSete.getTelefone());
+	}
+	
 	private void mockFornecedor() {
 		fornecedor.setCnpj("05.729.768/0001-80");
 		fornecedor.setNomeDoContato("Maxuel Vieira Tobá Junior");

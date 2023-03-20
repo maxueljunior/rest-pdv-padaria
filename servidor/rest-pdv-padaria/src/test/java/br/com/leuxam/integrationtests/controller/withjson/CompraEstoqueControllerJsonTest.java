@@ -38,6 +38,7 @@ import io.restassured.specification.RequestSpecification;
 public class CompraEstoqueControllerJsonTest extends AbstractIntegrationTest{
 	
 	private static RequestSpecification specification;
+	private static RequestSpecification specificationFindById;
 	private static ObjectMapper objectMapper;
 	
 	private static CompraEstoqueVO compraEstoque;
@@ -71,6 +72,14 @@ public class CompraEstoqueControllerJsonTest extends AbstractIntegrationTest{
 		specification = new RequestSpecBuilder()
 				.addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + accessToken)
 				.setBasePath("/api/compra-de-produtos")
+				.setPort(TestConfigs.SERVER_PORT)
+					.addFilter(new RequestLoggingFilter(LogDetail.ALL))
+					.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+				.build();
+		
+		specificationFindById = new RequestSpecBuilder()
+				.addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + accessToken)
+				.setBasePath("/api/compra-de-produtos/relatorio")
 				.setPort(TestConfigs.SERVER_PORT)
 					.addFilter(new RequestLoggingFilter(LogDetail.ALL))
 					.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
@@ -114,10 +123,11 @@ public class CompraEstoqueControllerJsonTest extends AbstractIntegrationTest{
 	@Order(2)
 	public void testFindByIdCompras() throws JsonMappingException, JsonProcessingException {
 		
-		var content = given().spec(specification)
+		var content = given().spec(specificationFindById)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
-					.queryParam("id", compraEstoque.getCompras().getId(), "table", "compras")
+					.queryParam("id", compraEstoque.getCompras().getId())
+					.queryParam("table", "compras")
 					.when()
 					.get()
 				.then()
@@ -141,10 +151,11 @@ public class CompraEstoqueControllerJsonTest extends AbstractIntegrationTest{
 	@Order(3)
 	public void testFindByIdProduto() throws JsonMappingException, JsonProcessingException {
 		
-		var content = given().spec(specification)
+		var content = given().spec(specificationFindById)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
-					.queryParam("id", compraEstoque.getEstoque().getId(), "table", "produto")
+					.queryParam("id", compraEstoque.getEstoque().getId())
+					.queryParam("table", "produto")
 					.when()
 					.get()
 				.then()
@@ -196,7 +207,20 @@ public class CompraEstoqueControllerJsonTest extends AbstractIntegrationTest{
 		assertEquals(100.0, persistedCompraEstoque.getQuantidade());
 	}
 
+	@Test
+	@Order(5)
+	public void testeDelete() throws JsonMappingException, JsonProcessingException {
+		
+		given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.queryParam("product", compraEstoque.getEstoque().getId())
+					.queryParam("purchase", compraEstoque.getCompras().getId())
+					.when()
+					.delete()
+				.then()
+					.statusCode(204);
 
+	}
 	private void mockCompraEstoque() {
 		ComprasVO compras = new ComprasVO(1L, null, null);
 		EstoqueVO estoque = new EstoqueVO(1L, null, null, null, null, null);
