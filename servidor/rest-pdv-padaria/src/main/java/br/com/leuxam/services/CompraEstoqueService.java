@@ -2,9 +2,18 @@ package br.com.leuxam.services;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
+import br.com.leuxam.controller.CompraEstoqueController;
 import br.com.leuxam.data.vo.v1.CompraEstoqueVO;
 import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
@@ -23,8 +32,18 @@ public class CompraEstoqueService {
 	@Autowired
 	ComprasRepository comprasRepository;
 	
-	public List<CompraEstoqueVO> findAll(){
-		return DozerMapper.parseListObjects(repository.findAll(), CompraEstoqueVO.class);
+	@Autowired
+	PagedResourcesAssembler<CompraEstoqueVO> assembler;
+	
+	public PagedModel<EntityModel<CompraEstoqueVO>> findAll(Pageable pageable){
+		
+		var compraEstoquePage = repository.findAll(pageable);
+		
+		var compraEstoqueVosPage = compraEstoquePage.map(ce -> DozerMapper.parseObject(ce, CompraEstoqueVO.class));
+		
+		Link link = linkTo(methodOn(CompraEstoqueController.class).findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		
+		return assembler.toModel(compraEstoqueVosPage, link);
 	}
 	
 	public List<CompraEstoqueVO> findAllWithProduto(Long id){

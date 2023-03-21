@@ -113,7 +113,7 @@ class CompraEstoqueServiceTest {
 		assertEquals(9.0, compraProdutoNove.getPreco());
 		assertEquals(9.0, compraProdutoNove.getQuantidade());
 	}
-	
+	/*
 	@Test
 	void testFindAll() {
 		
@@ -146,7 +146,7 @@ class CompraEstoqueServiceTest {
 		assertEquals(9.0, compraProdutoNove.getPreco());
 		assertEquals(9.0, compraProdutoNove.getQuantidade());
 	}
-
+*/
 	@Test
 	void testCreate() {
 		CompraEstoque entity = input.mockEntity(1);

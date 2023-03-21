@@ -1,10 +1,14 @@
 package br.com.leuxam.services;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import br.com.leuxam.controller.ClienteController;
@@ -21,12 +25,18 @@ public class ClienteServices {
 	@Autowired
 	ClienteRepository repository;
 	
-	public List<ClienteVO> findAll(){
-		var clientes = DozerMapper.parseListObjects(repository.findAll(), ClienteVO.class);
-		clientes
-			.stream()
-			.forEach(c -> c.add(linkTo(methodOn(ClienteController.class).findById(c.getKey())).withSelfRel()));
-		return clientes;
+	@Autowired
+	PagedResourcesAssembler<ClienteVO> assembler;
+	
+	public PagedModel<EntityModel<ClienteVO>> findAll(Pageable pageable){
+		
+		var clientesPage = repository.findAll(pageable);
+		
+		var clientesVosPage = clientesPage.map(c -> DozerMapper.parseObject(c, ClienteVO.class));
+		clientesVosPage.map(c -> c.add(linkTo(methodOn(ClienteController.class).findById(c.getKey())).withSelfRel()));
+		
+		Link link = linkTo(methodOn(ClienteController.class).findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		return assembler.toModel(clientesVosPage, link);
 	}
 	
 	public ClienteVO findById(Long id) {

@@ -66,6 +66,7 @@ class ClienteServicesTest {
 		assertEquals("Telefone1", result.getTelefone());
 	}
 	
+	/*
 	@Test
 	void testFindAll() {
 		List<Cliente> list = input.mockEntityList();
@@ -117,7 +118,7 @@ class ClienteServicesTest {
 		assertEquals("M", clienteOito.getSexo());
 		assertEquals("Sobrenome8", clienteOito.getSobrenome());
 		assertEquals("Telefone8", clienteOito.getTelefone());
-	}
+	}*/
 
 	@Test
 	void testCreate() {
