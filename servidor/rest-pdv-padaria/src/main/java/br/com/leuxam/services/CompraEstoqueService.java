@@ -1,7 +1,5 @@
 package br.com.leuxam.services;
 
-import java.util.List;
-
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -46,12 +44,25 @@ public class CompraEstoqueService {
 		return assembler.toModel(compraEstoqueVosPage, link);
 	}
 	
-	public List<CompraEstoqueVO> findAllWithProduto(Long id){
-		return DozerMapper.parseListObjects(repository.findAllWithProduto(id), CompraEstoqueVO.class);
+	public PagedModel<EntityModel<CompraEstoqueVO>> findAllWithProduto(Long id, Pageable pageable){
+		var compraEstoqueProdPage = repository.findAllWithProduto(id, pageable);
+		
+		var compraEstoqueProdVosPage = compraEstoqueProdPage.map(ce -> DozerMapper.parseObject(ce, CompraEstoqueVO.class));
+		
+		Link link = linkTo(methodOn(CompraEstoqueController.class).findAllWithProdutoOrCompra(id, "produto", pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		
+		return assembler.toModel(compraEstoqueProdVosPage, link);
 	}
 	
-	public List<CompraEstoqueVO> findAllWithCompra(Long id){
-		return DozerMapper.parseListObjects(repository.findAllWithCompras(id), CompraEstoqueVO.class);
+	public PagedModel<EntityModel<CompraEstoqueVO>> findAllWithCompra(Long id, Pageable pageable){
+		
+		var compraEstoqueCompPage = repository.findAllWithCompras(id, pageable);
+		
+		var compraEstoqueCompVosPage = compraEstoqueCompPage.map(ce -> DozerMapper.parseObject(ce, CompraEstoqueVO.class));
+		
+		Link link = linkTo(methodOn(CompraEstoqueController.class).findAllWithProdutoOrCompra(id, "compras", pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		
+		return assembler.toModel(compraEstoqueCompVosPage, link);
 	}
 	
 	@Transactional

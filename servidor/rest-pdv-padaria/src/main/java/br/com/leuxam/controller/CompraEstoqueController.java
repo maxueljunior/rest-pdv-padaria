@@ -1,7 +1,5 @@
 package br.com.leuxam.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -84,13 +82,21 @@ public class CompraEstoqueController {
 			@ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
 		}
 	)
-	public List<CompraEstoqueVO> findAllWithProdutoOrCompra(
+	public ResponseEntity<PagedModel<EntityModel<CompraEstoqueVO>>> findAllWithProdutoOrCompra(
 			@RequestParam(value = "id", defaultValue = "1") Long id,
-			@RequestParam(value = "table", defaultValue = "produto") String table){
+			@RequestParam(value = "table", defaultValue = "produto") String table,
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "size", defaultValue = "12") Integer size,
+			@RequestParam(value = "direction", defaultValue = "asc") String direction){
+		
+		var directionSort = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+		
 		if("produto".equalsIgnoreCase(table)) {
-			return service.findAllWithProduto(id);
+			Pageable pageable = PageRequest.of(page, size, Sort.by(directionSort, "id.compras"));
+			return ResponseEntity.ok(service.findAllWithProduto(id, pageable));
 		}else {
-			return service.findAllWithCompra(id);
+			Pageable pageable = PageRequest.of(page, size, Sort.by(directionSort, "id.estoque"));
+			return ResponseEntity.ok(service.findAllWithCompra(id, pageable));
 		}
 	}
 	

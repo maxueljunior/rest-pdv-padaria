@@ -8,6 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import br.com.leuxam.controller.ComprasController;
@@ -26,15 +31,19 @@ public class ComprasService {
 	@Autowired
 	ComprasRepository repository;
 	
-	public List<ComprasVO> findAll(){
-		var compras = DozerMapper.parseListObjects(repository.findAll(), ComprasVO.class);
-		compras
-			.stream()
-			.forEach(c -> c.add(linkTo(methodOn(ComprasController.class).findById(c.getKey())).withSelfRel()));
+	@Autowired
+	PagedResourcesAssembler<ComprasVO> assembler;
+	
+	public PagedModel<EntityModel<ComprasVO>> findAll(Pageable pageable){
+		
+		var comprasPage = repository.findAll(pageable);
+		
+		var comprasVosPage = comprasPage.map(c -> DozerMapper.parseObject(c, ComprasVO.class));
+		comprasVosPage.map(c -> c.add(linkTo(methodOn(ComprasController.class).findById(c.getKey())).withSelfRel()));
 		
 		List<FornecedorVO> fornecedor = new ArrayList<>();
 		
-		for (ComprasVO compraVO : compras) {
+		for (ComprasVO compraVO : comprasVosPage) {
 			fornecedor.add(compraVO.getFornecedor());
 		}
 		
@@ -43,10 +52,12 @@ public class ComprasService {
 			.forEach(f -> f.add(linkTo(methodOn(FornecedorController.class).findById(f.getKey())).withSelfRel()));
 		
 		for (int i = 0; i < fornecedor.size(); i++) {
-			compras.get(i).setFornecedor(fornecedor.get(i));
+			comprasVosPage.toList().get(i).setFornecedor(fornecedor.get(i));
 		}
 		
-		return compras;
+		Link link = linkTo(methodOn(ComprasController.class).findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		
+		return assembler.toModel(comprasVosPage, link);
 	}
 	
 	public ComprasVO findById(Long id) {

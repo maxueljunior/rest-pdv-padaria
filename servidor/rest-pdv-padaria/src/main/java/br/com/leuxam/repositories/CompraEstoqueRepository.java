@@ -1,7 +1,7 @@
 package br.com.leuxam.repositories;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,10 +14,10 @@ import br.com.leuxam.model.CompraEstoque;
 public interface CompraEstoqueRepository extends JpaRepository<CompraEstoque, Long>{
 	
 	@Query("SELECT c FROM CompraEstoque c WHERE c.id.compras.id =:idCompra")
-	public List<CompraEstoque> findAllWithCompras(@Param("idCompra") Long idCompra);
+	public Page<CompraEstoque> findAllWithCompras(@Param("idCompra") Long idCompra, Pageable pageable);
 	
 	@Query("SELECT c FROM CompraEstoque c WHERE c.id.estoque.id =:idProduto")
-	public List<CompraEstoque> findAllWithProduto(@Param("idProduto") Long idProduto);
+	public Page<CompraEstoque> findAllWithProduto(@Param("idProduto") Long idProduto, Pageable pageable);
 	
 	@Query("SELECT c FROM CompraEstoque c WHERE c.id.estoque.id =:idProduto AND c.id.compras.id =:idCompra")
 	public CompraEstoque findByIdProdutoAndCompras(

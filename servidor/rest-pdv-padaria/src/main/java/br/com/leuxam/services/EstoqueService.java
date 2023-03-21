@@ -1,10 +1,14 @@
 package br.com.leuxam.services;
 
-import java.util.List;
-
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import br.com.leuxam.controller.EstoqueController;
@@ -21,12 +25,18 @@ public class EstoqueService {
 	@Autowired
 	EstoqueRepository repository;
 	
-	public List<EstoqueVO> findAll(){
-		var estoques = DozerMapper.parseListObjects(repository.findAll(), EstoqueVO.class);
-		estoques
-			.stream()
-			.forEach(e -> e.add(linkTo(methodOn(EstoqueController.class).findById(e.getKey())).withSelfRel()));
-		return estoques;
+	@Autowired
+	PagedResourcesAssembler<EstoqueVO> assembler;
+	
+	public PagedModel<EntityModel<EstoqueVO>> findAll(Pageable pageable){
+		
+		var estoquePage = repository.findAll(pageable);
+		
+		var estoqueVosPage = estoquePage.map(e -> DozerMapper.parseObject(e, EstoqueVO.class));
+		estoqueVosPage.map(e -> e.add(linkTo(methodOn(EstoqueController.class).findById(e.getKey())).withSelfRel()));
+		
+		Link link = linkTo(methodOn(EstoqueController.class).findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		return assembler.toModel(estoqueVosPage, link);
 	}
 	
 	public EstoqueVO findById(Long id) {

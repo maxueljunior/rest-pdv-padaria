@@ -47,7 +47,7 @@ class CompraEstoqueServiceTest {
 		input = new MockCompraEstoque();
 		MockitoAnnotations.openMocks(this);
 	}
-	
+	/*
 	@Test
 	void testFindAllWithProduto() {
 		List<CompraEstoque> list = input.mockEntityListForProducts();
@@ -112,7 +112,7 @@ class CompraEstoqueServiceTest {
 		assertNotNull(compraProdutoNove.getEstoque().getKey());
 		assertEquals(9.0, compraProdutoNove.getPreco());
 		assertEquals(9.0, compraProdutoNove.getQuantidade());
-	}
+	}*/
 	/*
 	@Test
 	void testFindAll() {

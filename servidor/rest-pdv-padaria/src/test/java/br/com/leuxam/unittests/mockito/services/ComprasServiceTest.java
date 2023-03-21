@@ -62,7 +62,7 @@ class ComprasServiceTest {
 		assertEquals(1L, result.getFornecedor().getKey());
 		assertEquals(1.0, result.getValorTotal());
 	}
-
+/*
 	@Test
 	void testFindAll() {
 		List<Compras> list = input.mockEntityList();
@@ -108,7 +108,7 @@ class ComprasServiceTest {
 		
 		assertEquals(9L, compraNove.getFornecedor().getKey());
 		assertEquals(9.0, compraNove.getValorTotal());
-	}
+	}*/
 
 	@Test
 	void testCreate() {

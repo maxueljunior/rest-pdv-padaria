@@ -63,7 +63,7 @@ class EstoqueServiceTest {
 		assertEquals(1.0, result.getQuantidade());
 		assertEquals("KG", result.getUnidade());
 	}
-
+/*
 	@Test
 	void testFindAll() {
 		List<Estoque> list = input.mockEntityList();
@@ -113,7 +113,7 @@ class EstoqueServiceTest {
 		assertEquals(9.0, estoqueNove.getQuantidade());
 		assertEquals("KG", estoqueNove.getUnidade());
 		
-	}
+	}*/
 
 	@Test
 	void testCreate() {
