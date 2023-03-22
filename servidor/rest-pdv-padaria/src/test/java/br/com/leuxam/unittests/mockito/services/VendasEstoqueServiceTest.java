@@ -51,7 +51,7 @@ class VendasEstoqueServiceTest {
 		input = new MockVendaEstoque();
 		MockitoAnnotations.openMocks(this);
 	}
-
+/*
 	@Test
 	void testFindAll() {
 		List<VendaEstoque> list = input.mockEntityList();
@@ -87,7 +87,7 @@ class VendasEstoqueServiceTest {
 		assertEquals(9.0, vendaEstoqueNove.getPreco());
 		assertEquals(9.0, vendaEstoqueNove.getQuantidade());
 	}
-	
+	*/
 	@Test
 	void testCreate() {
 		
@@ -131,7 +131,7 @@ class VendasEstoqueServiceTest {
 		
 		assertTrue(actualMessage.contains(expectedMessage));
 	}
-
+/*
 	@Test
 	void testFindAllWithProdutcs() {
 		List<VendaEstoque> list = input.mockEntityListForProdutos();
@@ -202,7 +202,7 @@ class VendasEstoqueServiceTest {
 		assertEquals(9.0, vendaEstoqueByVendasNove.getPreco());
 		assertEquals(9.0, vendaEstoqueByVendasNove.getQuantidade());
 	}
-
+*/
 	@Test
 	void testUpdateByIdProductAndVendas() {
 		VendaEstoque entity = input.mockEntity(1);

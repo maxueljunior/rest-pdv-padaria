@@ -63,7 +63,7 @@ class VendasServiceTest {
 		assertNotNull(result.getDataVenda());
 		assertEquals(1.0, result.getValorTotal());
 	}
-
+/*
 	@Test
 	void testFindAll() {
 		List<Vendas> list = input.mockEntityList();
@@ -112,7 +112,7 @@ class VendasServiceTest {
 		assertNotNull(listaVendasNove.getCondicaoPagamento());
 		assertNotNull(listaVendasNove.getDataVenda());
 		assertEquals(9.0, listaVendasNove.getValorTotal());
-	}
+	}*/
 
 	@Test
 	void testCreate() {

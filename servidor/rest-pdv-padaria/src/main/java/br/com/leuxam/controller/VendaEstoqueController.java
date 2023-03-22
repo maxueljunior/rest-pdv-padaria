@@ -1,8 +1,12 @@
 package br.com.leuxam.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,8 +50,15 @@ public class VendaEstoqueController {
 				@ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
 		}
 	)
-	public List<VendaEstoqueVO> findAll(){
-		return service.findAll();
+	public ResponseEntity<PagedModel<EntityModel<VendaEstoqueVO>>> findAll(
+			@RequestParam(name = "page", defaultValue = "0") Integer page,
+			@RequestParam(name = "size", defaultValue = "12") Integer size,
+			@RequestParam(name = "direction", defaultValue = "asc") String direction
+			){
+		
+		var directionSort = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+		Pageable pageable = PageRequest.of(page, size, Sort.by(directionSort, "id.vendas"));
+		return ResponseEntity.ok(service.findAll(pageable));
 	}
 	
 	@PostMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
@@ -119,14 +130,21 @@ public class VendaEstoqueController {
 				@ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
 		}
 	)
-	public List<VendaEstoqueVO> findAllWithProdutoOrVendas(
+	public ResponseEntity<PagedModel<EntityModel<VendaEstoqueVO>>> findAllWithProdutoOrVendas(
 			@RequestParam(value = "id", defaultValue = "1") Long id,
-			@RequestParam(value = "table", defaultValue = "produto") String table){
+			@RequestParam(value = "table", defaultValue = "produto") String table,
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "size", defaultValue = "12") Integer size,
+			@RequestParam(value = "direction", defaultValue = "asc") String direction){
+		
+		var directionSort = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
 		
 		if("produto".equalsIgnoreCase(table)) {
-			return service.findAllWithProdutcs(id);
+			Pageable pageable = PageRequest.of(page, size, Sort.by(directionSort, "id.vendas"));
+			return ResponseEntity.ok(service.findAllWithProdutcs(id, pageable));
 		}else {
-			return service.findAllWithVendas(id);
+			Pageable pageable = PageRequest.of(page, size, Sort.by(directionSort, "id.estoque"));
+			return ResponseEntity.ok(service.findAllWithVendas(id, pageable));
 		}
 	}
 	

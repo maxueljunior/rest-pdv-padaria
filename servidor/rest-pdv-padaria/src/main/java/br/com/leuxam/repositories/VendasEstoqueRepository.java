@@ -1,7 +1,7 @@
 package br.com.leuxam.repositories;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,10 +19,10 @@ public interface VendasEstoqueRepository extends JpaRepository<VendaEstoque, Lon
 			@Param("idVendas") Long idVendas);
 	
 	@Query("SELECT v FROM VendaEstoque v WHERE v.id.estoque.id =:idProduto")
-	public List<VendaEstoque> findAllWithProducts(@Param("idProduto") Long idProduto);
+	public Page<VendaEstoque> findAllWithProducts(@Param("idProduto") Long idProduto, Pageable pageable);
 	
 	@Query("SELECT v FROM VendaEstoque v WHERE v.id.vendas.id =:idVendas")
-	public List<VendaEstoque> findAllWithVendas(@Param("idVendas") Long idVendas);
+	public Page<VendaEstoque> findAllWithVendas(@Param("idVendas") Long idVendas, Pageable pageable);
 	
 	@Modifying
 	@Query("DELETE FROM VendaEstoque v WHERE v.id.estoque.id =:idProduto AND v.id.vendas.id =:idVendas")

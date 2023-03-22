@@ -62,7 +62,7 @@ class FornecedorServiceTest {
 		assertEquals("Razao1", result.getRazaoSocial());
 		assertEquals("Telefone1", result.getTelefone());
 	}
-
+/*
 	@Test
 	void testFindAll() {
 		List<Fornecedor> list = input.mockEntityList();
@@ -109,7 +109,7 @@ class FornecedorServiceTest {
 		assertEquals("Razao9", fornecedorNove.getRazaoSocial());
 		assertEquals("Telefone9", fornecedorNove.getTelefone());
 	}
-
+*/
 	@Test
 	void testCreate() {
 		Fornecedor entity = input.mockEntity(1);

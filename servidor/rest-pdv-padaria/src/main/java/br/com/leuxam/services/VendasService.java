@@ -8,6 +8,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import br.com.leuxam.controller.ClienteController;
@@ -17,7 +22,6 @@ import br.com.leuxam.data.vo.v1.VendasVO;
 import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
 import br.com.leuxam.mapper.DozerMapper;
-import br.com.leuxam.model.Permission;
 import br.com.leuxam.model.Vendas;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import br.com.leuxam.repositories.VendasRepository;
@@ -32,6 +36,9 @@ public class VendasService {
 	@Autowired
 	VendasRepository repository;
 	
+	@Autowired
+	PagedResourcesAssembler<VendasVO> assembler;
+	
 	public VendasVO findById(Long id) {
 		var entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Não existe venda com esse ID"));
@@ -43,16 +50,16 @@ public class VendasService {
 		return vo;
 	}
 	
-	public List<VendasVO> findAll(){
+	public PagedModel<EntityModel<VendasVO>> findAll(Pageable pageable){
 		
-		var vendas = DozerMapper.parseListObjects(repository.findAll(), VendasVO.class);
-		vendas
-			.stream()
-			.forEach(v -> v.add(linkTo(methodOn(VendasController.class).findById(v.getKey())).withSelfRel()));
+		var vendasPage = repository.findAll(pageable);
+		
+		var vendasVosPage = vendasPage.map(v -> DozerMapper.parseObject(v, VendasVO.class));
+		vendasVosPage.map(v -> v.add(linkTo(methodOn(VendasController.class).findById(v.getKey())).withSelfRel()));
 		
 		List<ClienteVO> clientes = new ArrayList<>();
 		
-		for (VendasVO vendaVO : vendas) {
+		for (VendasVO vendaVO : vendasVosPage) {
 			clientes.add(vendaVO.getCliente());
 		}
 		
@@ -61,10 +68,12 @@ public class VendasService {
 			.forEach(c -> c.add(linkTo(methodOn(ClienteController.class).findById(c.getKey())).withSelfRel()));
 		
 		for (int i = 0; i < clientes.size(); i++) {
-			vendas.get(i).setCliente(clientes.get(i));
+			vendasVosPage.toList().get(i).setCliente(clientes.get(i));
 		}
 		
-		return vendas;
+		Link link = linkTo(methodOn(VendasController.class).findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		
+		return assembler.toModel(vendasVosPage, link);
 	}
 	
 	public VendasVO create(VendasVO venda) {

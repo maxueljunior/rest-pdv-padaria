@@ -1,10 +1,17 @@
 package br.com.leuxam.services;
 
-import java.util.List;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
+import br.com.leuxam.controller.VendaEstoqueController;
 import br.com.leuxam.data.vo.v1.VendaEstoqueVO;
 import br.com.leuxam.exceptions.RequiredObjectIsNullException;
 import br.com.leuxam.exceptions.ResourceNotFoundException;
@@ -25,8 +32,16 @@ public class VendasEstoqueService {
 	@Autowired
 	VendasRepository vendasRepository;
 	
-	public List<VendaEstoqueVO> findAll(){
-		return DozerMapper.parseListObjects(repository.findAll(), VendaEstoqueVO.class);
+	@Autowired
+	PagedResourcesAssembler<VendaEstoqueVO> assembler;
+	
+	public PagedModel<EntityModel<VendaEstoqueVO>> findAll(Pageable pageable){
+		var vendaEstoquePage = repository.findAll(pageable);
+		
+		var vendaEstoqueVosPage = vendaEstoquePage.map(ve -> DozerMapper.parseObject(ve, VendaEstoqueVO.class));
+		
+		Link link = linkTo(methodOn(VendaEstoqueController.class).findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		return assembler.toModel(vendaEstoqueVosPage, link);
 	}
 	
 	@Transactional
@@ -47,12 +62,24 @@ public class VendasEstoqueService {
 		return vo;
 	}
 	
-	public List<VendaEstoqueVO> findAllWithProdutcs(Long id){
-		return DozerMapper.parseListObjects(repository.findAllWithProducts(id), VendaEstoqueVO.class);
+	public PagedModel<EntityModel<VendaEstoqueVO>> findAllWithProdutcs(Long id, Pageable pageable){
+		
+		var vendaEstoqueProdPage = repository.findAllWithProducts(id, pageable);
+		
+		var vendaEstoqueProdVosPage = vendaEstoqueProdPage.map(ve -> DozerMapper.parseObject(ve, VendaEstoqueVO.class));
+		
+		Link link = linkTo(methodOn(VendaEstoqueController.class).findAllWithProdutoOrVendas(id, "produto", pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		return assembler.toModel(vendaEstoqueProdVosPage, link);
 	}
 	
-	public List<VendaEstoqueVO> findAllWithVendas(Long id){
-		return DozerMapper.parseListObjects(repository.findAllWithVendas(id), VendaEstoqueVO.class);
+	public PagedModel<EntityModel<VendaEstoqueVO>> findAllWithVendas(Long id, Pageable pageable){
+		
+		var vendaEstoqueVendPage = repository.findAllWithVendas(id, pageable);
+		
+		var vendaEstoqueVendVosPage = vendaEstoqueVendPage.map(ve -> DozerMapper.parseObject(ve, VendaEstoqueVO.class));
+		
+		Link link = linkTo(methodOn(VendaEstoqueController.class).findAllWithProdutoOrVendas(id, "vendas", pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		return assembler.toModel(vendaEstoqueVendVosPage, link);
 	}
 	
 	@Transactional
