@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,8 +23,8 @@ import br.com.leuxam.data.vo.v1.security.TokenVO;
 import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ClienteVO;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperClienteVO;
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.common.mapper.TypeRef;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -216,6 +214,7 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.queryParams("page", 0, "size", 12, "direction","asc")
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 				.when()
 					.get()
@@ -225,28 +224,29 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<ClienteVO> clientes = objectMapper.readValue(content, new TypeReference<List<ClienteVO>>() {});
+		WrapperClienteVO wrapper = objectMapper.readValue(content, WrapperClienteVO.class);
+		var clientes = wrapper.getEmbedded().getClientes();
 		ClienteVO foundClienteUm = clientes.get(0);
 		
-		assertEquals(1, foundClienteUm.getId());
+		assertEquals(51, foundClienteUm.getId());
 		
-		assertEquals("8241 Ridgeway Plaza", foundClienteUm.getEndereco());
-		assertEquals(81, foundClienteUm.getLucratividade());
-		assertEquals("Bernice", foundClienteUm.getNome());
-		assertEquals("F", foundClienteUm.getSexo());
-		assertEquals("Cade", foundClienteUm.getSobrenome());
-		assertEquals("00-34731-8780", foundClienteUm.getTelefone());
+		assertEquals("51 Tennyson Lane", foundClienteUm.getEndereco());
+		assertEquals(9.0, foundClienteUm.getLucratividade());
+		assertEquals("Angel", foundClienteUm.getNome());
+		assertEquals("M", foundClienteUm.getSexo());
+		assertEquals("Demetr", foundClienteUm.getSobrenome());
+		assertEquals("18-05519-6674", foundClienteUm.getTelefone());
 		
 		ClienteVO foundClienteSete = clientes.get(6);
 		
-		assertEquals(7, foundClienteSete.getId());
+		assertEquals(63, foundClienteSete.getId());
 		
-		assertEquals("3852 Moland Junction", foundClienteSete.getEndereco());
-		assertEquals(82, foundClienteSete.getLucratividade());
-		assertEquals("Mickie", foundClienteSete.getNome());
-		assertEquals("F", foundClienteSete.getSexo());
-		assertEquals("Stirley", foundClienteSete.getSobrenome());
-		assertEquals("85-85089-1044", foundClienteSete.getTelefone());
+		assertEquals("23065 Rigney Hill", foundClienteSete.getEndereco());
+		assertEquals(8.0, foundClienteSete.getLucratividade());
+		assertEquals("Beale", foundClienteSete.getNome());
+		assertEquals("M", foundClienteSete.getSexo());
+		assertEquals("Abel", foundClienteSete.getSobrenome());
+		assertEquals("47-00382-8395", foundClienteSete.getTelefone());
 	}
 	
 	@Test

@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -17,8 +15,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 
 import br.com.leuxam.configs.TestConfigs;
 import br.com.leuxam.data.vo.v1.security.TokenVO;
@@ -26,6 +22,7 @@ import br.com.leuxam.integrationtests.controller.withyaml.mapper.YMLMapper;
 import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ClienteVO;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperClienteVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
 import io.restassured.config.RestAssuredConfig;
@@ -222,7 +219,7 @@ public class ClienteControllerYamlTest extends AbstractIntegrationTest{
 	@Order(5)
 	public void testFindAll() throws JsonProcessingException{
 		
-		var content = given().spec(specification)
+		var wrapper = given().spec(specification)
 				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
@@ -233,9 +230,9 @@ public class ClienteControllerYamlTest extends AbstractIntegrationTest{
 					.statusCode(200)
 				.extract()
 					.body()
-						.as(ClienteVO[].class, objectMapper);
+						.as(WrapperClienteVO.class, objectMapper);
 		
-		List<ClienteVO> clientes = Arrays.asList(content);
+		var clientes = wrapper.getEmbedded().getClientes();
 		ClienteVO foundClienteUm = clientes.get(0);
 		
 		assertEquals(1, foundClienteUm.getId());

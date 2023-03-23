@@ -26,6 +26,7 @@ import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ComprasVO;
 import br.com.leuxam.integrationtests.vo.FornecedorVO;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperComprasVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -185,6 +186,7 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
 					.get()
@@ -194,19 +196,20 @@ public class CompraControllerJsonTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<ComprasVO> compras = objectMapper.readValue(content, new TypeReference<List<ComprasVO>>() {});
+		WrapperComprasVO wrapper = objectMapper.readValue(content, WrapperComprasVO.class);
+		var compras = wrapper.getEmbedded().getCompras();
 
 		ComprasVO findComprasUm = compras.get(0);
 		
 		assertEquals(1, findComprasUm.getId());
 		assertEquals(1, findComprasUm.getFornecedor().getId());
-		assertEquals(150.0, findComprasUm.getValorTotal());
+		assertEquals(300.0, findComprasUm.getValorTotal());
 		
 		ComprasVO findComprasDois = compras.get(1);
 		
 		assertEquals(2, findComprasDois.getId());
 		assertEquals(50, findComprasDois.getFornecedor().getId());
-		assertEquals(534.5, findComprasDois.getValorTotal());
+		assertEquals(534.50, findComprasDois.getValorTotal());
 		
 	}
 	

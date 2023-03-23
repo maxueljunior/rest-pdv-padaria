@@ -27,6 +27,7 @@ import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.CompraEstoqueVO;
 import br.com.leuxam.integrationtests.vo.ComprasVO;
 import br.com.leuxam.integrationtests.vo.EstoqueVO;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperComprasEstoqueVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -128,6 +129,7 @@ public class CompraEstoqueControllerJsonTest extends AbstractIntegrationTest{
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.queryParam("id", compraEstoque.getCompras().getId())
 					.queryParam("table", "compras")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()
@@ -136,11 +138,12 @@ public class CompraEstoqueControllerJsonTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<CompraEstoqueVO> comprasEstoques = objectMapper.readValue(content, new TypeReference<List<CompraEstoqueVO>>() {});
+		WrapperComprasEstoqueVO wrapper = objectMapper.readValue(content, WrapperComprasEstoqueVO.class);
+		var comprasEstoques = wrapper.getEmbedded().getCompraEstoque();
 		
 		CompraEstoqueVO compraEstoqueUm = comprasEstoques.get(0);
 		
-		assertTrue(compraEstoqueUm.getEstoque().getId() > 0);
+		assertEquals(1, compraEstoqueUm.getEstoque().getId());
 		assertEquals(compraEstoque.getCompras().getId(), compraEstoqueUm.getCompras().getId());
 		
 		assertEquals(1.0, compraEstoqueUm.getPreco());
@@ -156,6 +159,7 @@ public class CompraEstoqueControllerJsonTest extends AbstractIntegrationTest{
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.queryParam("id", compraEstoque.getEstoque().getId())
 					.queryParam("table", "produto")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()
@@ -164,12 +168,13 @@ public class CompraEstoqueControllerJsonTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<CompraEstoqueVO> comprasEstoques = objectMapper.readValue(content, new TypeReference<List<CompraEstoqueVO>>() {});
+		WrapperComprasEstoqueVO wrapper = objectMapper.readValue(content, WrapperComprasEstoqueVO.class);
+		var comprasEstoques = wrapper.getEmbedded().getCompraEstoque();
 		
 		CompraEstoqueVO compraEstoqueUm = comprasEstoques.get(0);
 		
 		assertEquals(compraEstoque.getEstoque().getId() ,compraEstoqueUm.getEstoque().getId());
-		assertTrue(compraEstoqueUm.getCompras().getId() > 0);
+		assertEquals(1, compraEstoqueUm.getCompras().getId());
 		
 		assertEquals(1.0, compraEstoqueUm.getPreco());
 		assertEquals(2.0, compraEstoqueUm.getQuantidade());

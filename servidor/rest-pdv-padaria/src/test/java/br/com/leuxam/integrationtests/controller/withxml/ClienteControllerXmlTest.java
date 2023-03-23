@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
@@ -25,6 +23,7 @@ import br.com.leuxam.data.vo.v1.security.TokenVO;
 import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ClienteVO;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperClienteVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -230,7 +229,8 @@ public class ClienteControllerXmlTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<ClienteVO> clientes = objectMapper.readValue(content, new TypeReference<List<ClienteVO>>() {});
+		WrapperClienteVO wrapper = objectMapper.readValue(content, WrapperClienteVO.class);
+		var clientes = wrapper.getEmbedded().getClientes();
 		ClienteVO foundClienteUm = clientes.get(0);
 		
 		assertEquals(1, foundClienteUm.getId());
