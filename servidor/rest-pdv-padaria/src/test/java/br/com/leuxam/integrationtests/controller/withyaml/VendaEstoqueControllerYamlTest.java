@@ -28,6 +28,8 @@ import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.EstoqueVO;
 import br.com.leuxam.integrationtests.vo.VendaEstoqueVO;
 import br.com.leuxam.integrationtests.vo.VendasVO;
+import br.com.leuxam.integrationtests.vo.pagedmodels.PagedModelVendaEstoque;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperVendaEstoqueVO;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
@@ -128,22 +130,23 @@ public class VendaEstoqueControllerYamlTest extends AbstractIntegrationTest{
 	@Order(2)
 	public void testFindByIdProduto() throws JsonMappingException, JsonProcessingException {
 		
-		var content = given().spec(specificationFindById)
+		var wrapper = given().spec(specificationFindById)
 				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.queryParam("id", vendaEstoque.getEstoque().getId())
 					.queryParam("table", "produto")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()
 					.statusCode(200)
 				.extract()
 					.body()
-						.as(VendaEstoqueVO[].class, objectMapper);
+						.as(PagedModelVendaEstoque.class, objectMapper);
 		
-		List<VendaEstoqueVO> listVendaEstoque = Arrays.asList(content);
+		var listVendaEstoque = wrapper.getContent();
 		
 		VendaEstoqueVO vendaEstoqueUm = listVendaEstoque.get(0);
 		
@@ -158,22 +161,23 @@ public class VendaEstoqueControllerYamlTest extends AbstractIntegrationTest{
 	@Order(3)
 	public void testFindByIdVendas() throws JsonMappingException, JsonProcessingException {
 		
-		var content = given().spec(specificationFindById)
+		var wrapper = given().spec(specificationFindById)
 				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.queryParam("id", vendaEstoque.getEstoque().getId())
 					.queryParam("table", "vendas")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()
 					.statusCode(200)
 				.extract()
 					.body()
-						.as(VendaEstoqueVO[].class, objectMapper);
+						.as(PagedModelVendaEstoque.class, objectMapper);
 		
-		List<VendaEstoqueVO> listVendaEstoque = Arrays.asList(content);
+		var listVendaEstoque = wrapper.getContent();
 		
 		VendaEstoqueVO vendaEstoqueUm = listVendaEstoque.get(0);
 		

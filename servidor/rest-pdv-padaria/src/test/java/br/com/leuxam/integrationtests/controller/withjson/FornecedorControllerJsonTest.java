@@ -25,6 +25,7 @@ import br.com.leuxam.data.vo.v1.security.TokenVO;
 import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.FornecedorVO;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperFornecedorVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -184,6 +185,7 @@ public class FornecedorControllerJsonTest extends AbstractIntegrationTest{
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
 					.get()
@@ -193,34 +195,35 @@ public class FornecedorControllerJsonTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<FornecedorVO> fornecedores = objectMapper.readValue(content, new TypeReference<List<FornecedorVO>>() {});
+		WrapperFornecedorVO wrapper = objectMapper.readValue(content, WrapperFornecedorVO.class);
+		var fornecedores = wrapper.getEmbedded().getFornecedores();
 		
 		FornecedorVO fornecedorUm = fornecedores.get(0);
 		
-		assertEquals(1, fornecedorUm.getId());
+		assertEquals(36, fornecedorUm.getId());
 		
-		assertEquals("10.448.074/1073-42", fornecedorUm.getCnpj());
-		assertEquals("Connie Izen", fornecedorUm.getNomeDoContato());
-		assertEquals("Yotz", fornecedorUm.getRazaoSocial());
-		assertEquals("98-33652-2662", fornecedorUm.getTelefone());
+		assertEquals("66.186.410/9093-23", fornecedorUm.getCnpj());
+		assertEquals("Michele Skippings", fornecedorUm.getNomeDoContato());
+		assertEquals("Abata", fornecedorUm.getRazaoSocial());
+		assertEquals("81-86487-7858", fornecedorUm.getTelefone());
 		
 		FornecedorVO fornecedorCinco = fornecedores.get(5);
 		
-		assertEquals(6, fornecedorCinco.getId());
+		assertEquals(87, fornecedorCinco.getId());
 		
-		assertEquals("92.733.108/0374-53", fornecedorCinco.getCnpj());
-		assertEquals("Lissy Karlolczak", fornecedorCinco.getNomeDoContato());
-		assertEquals("Yakijo", fornecedorCinco.getRazaoSocial());
-		assertEquals("26-41140-2092", fornecedorCinco.getTelefone());		
+		assertEquals("20.245.034/7676-12", fornecedorCinco.getCnpj());
+		assertEquals("Berta Faulder", fornecedorCinco.getNomeDoContato());
+		assertEquals("Aivee", fornecedorCinco.getRazaoSocial());
+		assertEquals("30-75739-6582", fornecedorCinco.getTelefone());		
 		
 		FornecedorVO fornecedorSete = fornecedores.get(7);
 		
-		assertEquals(8, fornecedorSete.getId());
+		assertEquals(50, fornecedorSete.getId());
 		
-		assertEquals("24.313.511/1390-54", fornecedorSete.getCnpj());
-		assertEquals("Stephi Gerald", fornecedorSete.getNomeDoContato());
-		assertEquals("Divanoodle", fornecedorSete.getRazaoSocial());
-		assertEquals("90-59325-6440", fornecedorSete.getTelefone());
+		assertEquals("21.327.433/7101-85", fornecedorSete.getCnpj());
+		assertEquals("Wynn Heymes", fornecedorSete.getNomeDoContato());
+		assertEquals("Blogpad", fornecedorSete.getRazaoSocial());
+		assertEquals("71-60771-5128", fornecedorSete.getTelefone());
 	}
 	
 	private void mockFornecedor() {

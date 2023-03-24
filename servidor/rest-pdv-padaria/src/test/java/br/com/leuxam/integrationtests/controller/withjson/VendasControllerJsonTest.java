@@ -27,6 +27,7 @@ import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ClienteVO;
 import br.com.leuxam.integrationtests.vo.VendasVO;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperVendasVO;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -188,6 +189,7 @@ public class VendasControllerJsonTest extends AbstractIntegrationTest{
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
 					.get()
@@ -197,7 +199,8 @@ public class VendasControllerJsonTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<VendasVO> listVendas = objectMapper.readValue(content, new TypeReference<List<VendasVO>>() {});
+		WrapperVendasVO wrapper = objectMapper.readValue(content, WrapperVendasVO.class);
+		var listVendas = wrapper.getEmbedded().getVendas();
 		
 		VendasVO vendasUm = listVendas.get(0);
 		

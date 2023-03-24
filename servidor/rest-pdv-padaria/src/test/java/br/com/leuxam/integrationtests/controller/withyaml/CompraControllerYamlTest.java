@@ -28,6 +28,8 @@ import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ComprasVO;
 import br.com.leuxam.integrationtests.vo.FornecedorVO;
+import br.com.leuxam.integrationtests.vo.pagedmodels.PagedModelCompras;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperComprasVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
 import io.restassured.config.RestAssuredConfig;
@@ -194,10 +196,11 @@ public class CompraControllerYamlTest extends AbstractIntegrationTest{
 	@Order(5)
 	public void testFindAll() throws JsonMappingException, JsonProcessingException {
 		
-		var content = given().spec(specification)
+		var wrapper = given().spec(specification)
 				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
 					.get()
@@ -205,9 +208,9 @@ public class CompraControllerYamlTest extends AbstractIntegrationTest{
 					.statusCode(200)
 				.extract()
 					.body()
-						.as(ComprasVO[].class, objectMapper);
+						.as(PagedModelCompras.class, objectMapper);
 		
-		List<ComprasVO> compras = Arrays.asList(content);
+		var compras = wrapper.getContent();
 
 		ComprasVO findComprasUm = compras.get(0);
 		
@@ -219,7 +222,7 @@ public class CompraControllerYamlTest extends AbstractIntegrationTest{
 		
 		assertEquals(2, findComprasDois.getId());
 		assertEquals(50, findComprasDois.getFornecedor().getId());
-		assertEquals(534.5, findComprasDois.getValorTotal());
+		assertEquals(534.50, findComprasDois.getValorTotal());
 		
 	}
 	

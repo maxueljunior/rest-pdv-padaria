@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -17,10 +15,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import br.com.leuxam.configs.TestConfigs;
 import br.com.leuxam.data.vo.v1.security.TokenVO;
@@ -29,6 +24,7 @@ import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ClienteVO;
 import br.com.leuxam.integrationtests.vo.VendasVO;
+import br.com.leuxam.integrationtests.vo.pagedmodels.PagedModelVendas;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
@@ -197,10 +193,11 @@ public class VendasControllerYamlTest extends AbstractIntegrationTest{
 	@Order(5)
 	public void testFindAll() throws JsonMappingException, JsonProcessingException {
 		
-		var content = given().spec(specification)
+		var wrapper = given().spec(specification)
 				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
 					.get()
@@ -208,9 +205,9 @@ public class VendasControllerYamlTest extends AbstractIntegrationTest{
 					.statusCode(200)
 				.extract()
 					.body()
-						.as(VendasVO[].class, objectMapper);
+						.as(PagedModelVendas.class, objectMapper);
 		
-		List<VendasVO> listVendas = Arrays.asList(content);
+		var listVendas = wrapper.getContent();
 		
 		VendasVO vendasUm = listVendas.get(0);
 		

@@ -27,6 +27,8 @@ import br.com.leuxam.data.vo.v1.security.TokenVO;
 import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.EstoqueVO;
+import br.com.leuxam.integrationtests.vo.pagedmodels.PagedModelEstoque;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperEstoqueVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -197,6 +199,7 @@ public class EstoqueControllerXmlTest extends AbstractIntegrationTest{
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_XML)
 				.accept(TestConfigs.CONTENT_TYPE_XML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
 					.get()
@@ -206,33 +209,34 @@ public class EstoqueControllerXmlTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<EstoqueVO> listEstoque = objectMapper.readValue(content, new TypeReference<List<EstoqueVO>>() {});
+		PagedModelEstoque wrapper = objectMapper.readValue(content, PagedModelEstoque.class);
+		var listEstoque = wrapper.getContent();
 		
 		EstoqueVO estoqueUm = listEstoque.get(0);
-		assertEquals(1 ,estoqueUm.getId());
+		assertEquals(60 ,estoqueUm.getId());
 		
 		assertNotNull(estoqueUm.getDataCompra());
 		assertNotNull(estoqueUm.getDataValidade());
-		assertEquals("Electrical Products", estoqueUm.getDescricao());
-		assertEquals(11.0, estoqueUm.getQuantidade());
-		assertEquals("KG", estoqueUm.getUnidade());
+		assertEquals("Agricultural Chemicals", estoqueUm.getDescricao());
+		assertEquals(2.0, estoqueUm.getQuantidade());
+		assertEquals("Un", estoqueUm.getUnidade());
 		
 		EstoqueVO estoqueCinco = listEstoque.get(5);
-		assertEquals(6 ,estoqueCinco.getId());
+		assertEquals(16 ,estoqueCinco.getId());
 		
 		assertNotNull(estoqueCinco.getDataCompra());
 		assertNotNull(estoqueCinco.getDataValidade());
-		assertEquals("Package Goods/Cosmetics", estoqueCinco.getDescricao());
+		assertEquals("Auto Parts:O.E.M.", estoqueCinco.getDescricao());
 		assertEquals(62.0, estoqueCinco.getQuantidade());
-		assertEquals("KG", estoqueCinco.getUnidade());
+		assertEquals("Un", estoqueCinco.getUnidade());
 		
 		EstoqueVO estoqueSete = listEstoque.get(7);
-		assertEquals(8 ,estoqueSete.getId());
+		assertEquals(44 ,estoqueSete.getId());
 		
 		assertNotNull(estoqueSete.getDataCompra());
 		assertNotNull(estoqueSete.getDataValidade());
-		assertEquals("Retail: Computer Software & Peripheral Equipment", estoqueSete.getDescricao());
-		assertEquals(88.0, estoqueSete.getQuantidade());
+		assertEquals("Biotechnology: Biological Products (No Diagnostic Substances)", estoqueSete.getDescricao());
+		assertEquals(4.0, estoqueSete.getQuantidade());
 		assertEquals("Un", estoqueSete.getUnidade());
 	}
 

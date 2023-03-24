@@ -26,6 +26,8 @@ import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ComprasVO;
 import br.com.leuxam.integrationtests.vo.FornecedorVO;
+import br.com.leuxam.integrationtests.vo.pagedmodels.PagedModelCompras;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperComprasVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -191,6 +193,7 @@ public class CompraControllerXmlTest extends AbstractIntegrationTest{
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_XML)
 				.accept(TestConfigs.CONTENT_TYPE_XML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
 					.get()
@@ -200,8 +203,9 @@ public class CompraControllerXmlTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<ComprasVO> compras = objectMapper.readValue(content, new TypeReference<List<ComprasVO>>() {});
-
+		PagedModelCompras wrapper = objectMapper.readValue(content, PagedModelCompras.class);
+		var compras = wrapper.getContent();
+		
 		ComprasVO findComprasUm = compras.get(0);
 		
 		assertEquals(1, findComprasUm.getId());
@@ -212,7 +216,7 @@ public class CompraControllerXmlTest extends AbstractIntegrationTest{
 		
 		assertEquals(2, findComprasDois.getId());
 		assertEquals(50, findComprasDois.getFornecedor().getId());
-		assertEquals(534.5, findComprasDois.getValorTotal());
+		assertEquals(534.50, findComprasDois.getValorTotal());
 		
 	}
 	

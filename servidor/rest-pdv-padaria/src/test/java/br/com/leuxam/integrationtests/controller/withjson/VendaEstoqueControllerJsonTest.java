@@ -27,6 +27,7 @@ import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.EstoqueVO;
 import br.com.leuxam.integrationtests.vo.VendaEstoqueVO;
 import br.com.leuxam.integrationtests.vo.VendasVO;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperVendaEstoqueVO;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -127,6 +128,7 @@ public class VendaEstoqueControllerJsonTest extends AbstractIntegrationTest{
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.queryParam("id", vendaEstoque.getEstoque().getId())
 					.queryParam("table", "produto")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()
@@ -135,7 +137,8 @@ public class VendaEstoqueControllerJsonTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<VendaEstoqueVO> listVendaEstoque = objectMapper.readValue(content, new TypeReference<List<VendaEstoqueVO>>() {});
+		WrapperVendaEstoqueVO wrapper = objectMapper.readValue(content, WrapperVendaEstoqueVO.class);
+		var listVendaEstoque = wrapper.getEmbedded().getVendaEstoques();
 		
 		VendaEstoqueVO vendaEstoqueUm = listVendaEstoque.get(0);
 		
@@ -155,6 +158,7 @@ public class VendaEstoqueControllerJsonTest extends AbstractIntegrationTest{
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.queryParam("id", vendaEstoque.getEstoque().getId())
 					.queryParam("table", "vendas")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()
@@ -163,7 +167,8 @@ public class VendaEstoqueControllerJsonTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<VendaEstoqueVO> listVendaEstoque = objectMapper.readValue(content, new TypeReference<List<VendaEstoqueVO>>() {});
+		WrapperVendaEstoqueVO wrapper = objectMapper.readValue(content, WrapperVendaEstoqueVO.class);
+		var listVendaEstoque = wrapper.getEmbedded().getVendaEstoques();
 		
 		VendaEstoqueVO vendaEstoqueUm = listVendaEstoque.get(0);
 		

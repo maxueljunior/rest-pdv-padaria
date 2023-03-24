@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -27,6 +25,7 @@ import br.com.leuxam.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.ClienteVO;
 import br.com.leuxam.integrationtests.vo.VendasVO;
+import br.com.leuxam.integrationtests.vo.pagedmodels.PagedModelVendas;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -194,6 +193,7 @@ public class VendasControllerXmlTest extends AbstractIntegrationTest{
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_XML)
 				.accept(TestConfigs.CONTENT_TYPE_XML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.when()
 					.get()
@@ -203,7 +203,8 @@ public class VendasControllerXmlTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<VendasVO> listVendas = objectMapper.readValue(content, new TypeReference<List<VendasVO>>() {});
+		PagedModelVendas wrapper = objectMapper.readValue(content, PagedModelVendas.class);
+		var listVendas = wrapper.getContent();
 		
 		VendasVO vendasUm = listVendas.get(0);
 		

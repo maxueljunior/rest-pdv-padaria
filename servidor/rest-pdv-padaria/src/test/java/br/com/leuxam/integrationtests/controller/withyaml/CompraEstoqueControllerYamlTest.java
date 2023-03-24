@@ -29,6 +29,8 @@ import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.CompraEstoqueVO;
 import br.com.leuxam.integrationtests.vo.ComprasVO;
 import br.com.leuxam.integrationtests.vo.EstoqueVO;
+import br.com.leuxam.integrationtests.vo.pagedmodels.PagedModelCompraEstoque;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperComprasEstoqueVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
 import io.restassured.config.RestAssuredConfig;
@@ -130,26 +132,27 @@ public class CompraEstoqueControllerYamlTest extends AbstractIntegrationTest{
 	@Order(2)
 	public void testFindByIdCompras() throws JsonMappingException, JsonProcessingException {
 		
-		var content = given().spec(specificationFindById)
+		var wrapper = given().spec(specificationFindById)
 				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.queryParam("id", compraEstoque.getCompras().getId())
 					.queryParam("table", "compras")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()
 					.statusCode(200)
 				.extract()
 					.body()
-						.as(CompraEstoqueVO[].class, objectMapper);
+						.as(PagedModelCompraEstoque.class, objectMapper);
 		
-		List<CompraEstoqueVO> comprasEstoques = Arrays.asList(content);
+		var comprasEstoques = wrapper.getContent();
 		
 		CompraEstoqueVO compraEstoqueUm = comprasEstoques.get(0);
 		
-		assertTrue(compraEstoqueUm.getEstoque().getId() > 0);
+		assertEquals(1, compraEstoqueUm.getEstoque().getId());
 		assertEquals(compraEstoque.getCompras().getId(), compraEstoqueUm.getCompras().getId());
 		
 		assertEquals(1.0, compraEstoqueUm.getPreco());
@@ -160,27 +163,28 @@ public class CompraEstoqueControllerYamlTest extends AbstractIntegrationTest{
 	@Order(3)
 	public void testFindByIdProduto() throws JsonMappingException, JsonProcessingException {
 		
-		var content = given().spec(specificationFindById)
+		var wrapper = given().spec(specificationFindById)
 				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.queryParam("id", compraEstoque.getEstoque().getId())
 					.queryParam("table", "produto")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()
 					.statusCode(200)
 				.extract()
 					.body()
-						.as(CompraEstoqueVO[].class, objectMapper);
+						.as(PagedModelCompraEstoque.class, objectMapper);
 		
-		List<CompraEstoqueVO> comprasEstoques = Arrays.asList(content);
+		var comprasEstoques = wrapper.getContent();
 		
 		CompraEstoqueVO compraEstoqueUm = comprasEstoques.get(0);
 		
 		assertEquals(compraEstoque.getEstoque().getId() ,compraEstoqueUm.getEstoque().getId());
-		assertTrue(compraEstoqueUm.getCompras().getId() > 0);
+		assertEquals(1, compraEstoqueUm.getCompras().getId());
 		
 		assertEquals(1.0, compraEstoqueUm.getPreco());
 		assertEquals(2.0, compraEstoqueUm.getQuantidade());

@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -27,6 +24,8 @@ import br.com.leuxam.integrationtests.vo.AccountCredentialsVO;
 import br.com.leuxam.integrationtests.vo.EstoqueVO;
 import br.com.leuxam.integrationtests.vo.VendaEstoqueVO;
 import br.com.leuxam.integrationtests.vo.VendasVO;
+import br.com.leuxam.integrationtests.vo.pagedmodels.PagedModelVendaEstoque;
+import br.com.leuxam.integrationtests.vo.wrappers.WrapperVendaEstoqueVO;
 import br.com.leuxam.model.enums.CondicaoPagamento;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -130,6 +129,7 @@ public class VendaEstoqueControllerXmlTest extends AbstractIntegrationTest{
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.queryParam("id", vendaEstoque.getEstoque().getId())
 					.queryParam("table", "produto")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()
@@ -138,8 +138,8 @@ public class VendaEstoqueControllerXmlTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<VendaEstoqueVO> listVendaEstoque = objectMapper.readValue(content, new TypeReference<List<VendaEstoqueVO>>() {});
-		
+		PagedModelVendaEstoque wrapper = objectMapper.readValue(content, PagedModelVendaEstoque.class);
+		var listVendaEstoque = wrapper.getContent();
 		VendaEstoqueVO vendaEstoqueUm = listVendaEstoque.get(0);
 		
 		assertEquals(1, vendaEstoqueUm.getEstoque().getId());
@@ -159,6 +159,7 @@ public class VendaEstoqueControllerXmlTest extends AbstractIntegrationTest{
 					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
 					.queryParam("id", vendaEstoque.getEstoque().getId())
 					.queryParam("table", "vendas")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()
@@ -167,7 +168,8 @@ public class VendaEstoqueControllerXmlTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 		
-		List<VendaEstoqueVO> listVendaEstoque = objectMapper.readValue(content, new TypeReference<List<VendaEstoqueVO>>() {});
+		PagedModelVendaEstoque wrapper = objectMapper.readValue(content, PagedModelVendaEstoque.class);
+		var listVendaEstoque = wrapper.getContent();
 		
 		VendaEstoqueVO vendaEstoqueUm = listVendaEstoque.get(0);
 		
