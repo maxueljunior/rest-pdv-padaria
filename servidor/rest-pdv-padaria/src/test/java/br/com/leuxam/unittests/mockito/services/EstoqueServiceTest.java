@@ -63,57 +63,6 @@ class EstoqueServiceTest {
 		assertEquals(1.0, result.getQuantidade());
 		assertEquals("KG", result.getUnidade());
 	}
-/*
-	@Test
-	void testFindAll() {
-		List<Estoque> list = input.mockEntityList();
-		
-		when(repository.findAll()).thenReturn(list);
-		
-		var estoque = service.findAll();
-		assertNotNull(estoque);
-		assertEquals(14, estoque.size());
-		
-		var estoqueUm = estoque.get(1);
-		
-		assertNotNull(estoqueUm);
-		assertNotNull(estoqueUm.getKey());
-		assertNotNull(estoqueUm.getLinks());
-		assertTrue(estoqueUm.toString().contains("links: [</api/produto/1>;rel=\"self\"]"));
-		
-		assertNotNull(estoqueUm.getDataCompra());
-		assertNotNull(estoqueUm.getDataValidade());
-		assertEquals("Descricao1", estoqueUm.getDescricao());
-		assertEquals(1.0, estoqueUm.getQuantidade());
-		assertEquals("KG", estoqueUm.getUnidade());
-		
-		var estoqueCinco = estoque.get(5);
-		
-		assertNotNull(estoqueCinco);
-		assertNotNull(estoqueCinco.getKey());
-		assertNotNull(estoqueCinco.getLinks());
-		assertTrue(estoqueCinco.toString().contains("links: [</api/produto/5>;rel=\"self\"]"));
-		
-		assertNotNull(estoqueCinco.getDataCompra());
-		assertNotNull(estoqueCinco.getDataValidade());
-		assertEquals("Descricao5", estoqueCinco.getDescricao());
-		assertEquals(5.0, estoqueCinco.getQuantidade());
-		assertEquals("KG", estoqueCinco.getUnidade());
-		
-		var estoqueNove = estoque.get(9);
-		
-		assertNotNull(estoqueNove);
-		assertNotNull(estoqueNove.getKey());
-		assertNotNull(estoqueNove.getLinks());
-		assertTrue(estoqueNove.toString().contains("links: [</api/produto/9>;rel=\"self\"]"));
-		
-		assertNotNull(estoqueNove.getDataCompra());
-		assertNotNull(estoqueNove.getDataValidade());
-		assertEquals("Descricao9", estoqueNove.getDescricao());
-		assertEquals(9.0, estoqueNove.getQuantidade());
-		assertEquals("KG", estoqueNove.getUnidade());
-		
-	}*/
 
 	@Test
 	void testCreate() {

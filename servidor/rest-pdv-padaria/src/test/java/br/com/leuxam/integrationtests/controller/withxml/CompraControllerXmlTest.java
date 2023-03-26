@@ -221,7 +221,7 @@ public class CompraControllerXmlTest extends AbstractIntegrationTest{
 	}
 	
 	@Test
-	@Order(5)
+	@Order(6)
 	public void testFindAllWithNotAuthorized() throws JsonMappingException, JsonProcessingException {
 		
 		RequestSpecification specificationWithNotAuthorized = new RequestSpecBuilder()
@@ -243,7 +243,32 @@ public class CompraControllerXmlTest extends AbstractIntegrationTest{
 					.body()
 						.asString();
 	}
-	
+
+	@Test
+	@Order(7)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/compras?page=0&amp;size=12&amp;direction=asc</href></links>"));
+		
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/fornecedor/1</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/compras/1</href></links>"));
+
+		assertTrue(content.contains("<page><size>12</size><totalElements>2</totalElements><totalPages>1</totalPages><number>0</number></page>"));
+	}
 	private void mockCompras() {
 		FornecedorVO fornecedor = new FornecedorVO(1L, null, null, null, null);
 		compras.setFornecedor(fornecedor);

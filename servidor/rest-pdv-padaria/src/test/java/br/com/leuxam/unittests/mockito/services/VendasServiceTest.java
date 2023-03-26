@@ -63,56 +63,6 @@ class VendasServiceTest {
 		assertNotNull(result.getDataVenda());
 		assertEquals(1.0, result.getValorTotal());
 	}
-/*
-	@Test
-	void testFindAll() {
-		List<Vendas> list = input.mockEntityList();
-		
-		when(repository.findAll()).thenReturn(list);
-		var listaVendas = service.findAll();
-		
-		assertNotNull(listaVendas);
-		assertEquals(14, listaVendas.size());
-		
-		var listaVendasUm = listaVendas.get(1);
-		
-		assertNotNull(listaVendasUm);
-		assertNotNull(listaVendasUm.getKey());
-		assertNotNull(listaVendasUm.getLinks());
-		assertTrue(listaVendasUm.toString().contains("links: [</api/vendas/1>;rel=\"self\"]"));
-		assertTrue(listaVendasUm.getCliente().toString().contains("links: [</api/cliente/1>;rel=\"self\"]"));
-		
-		assertNotNull(listaVendasUm.getCliente());
-		assertNotNull(listaVendasUm.getCondicaoPagamento());
-		assertNotNull(listaVendasUm.getDataVenda());
-		assertEquals(1.0, listaVendasUm.getValorTotal());
-		
-		var listaVendasCinco = listaVendas.get(5);
-		
-		assertNotNull(listaVendasCinco);
-		assertNotNull(listaVendasCinco.getKey());
-		assertNotNull(listaVendasCinco.getLinks());
-		assertTrue(listaVendasCinco.toString().contains("links: [</api/vendas/5>;rel=\"self\"]"));
-		assertTrue(listaVendasCinco.getCliente().toString().contains("links: [</api/cliente/5>;rel=\"self\"]"));
-		
-		assertNotNull(listaVendasCinco.getCliente());
-		assertNotNull(listaVendasCinco.getCondicaoPagamento());
-		assertNotNull(listaVendasCinco.getDataVenda());
-		assertEquals(5.0, listaVendasCinco.getValorTotal());
-		
-		var listaVendasNove = listaVendas.get(9);
-		
-		assertNotNull(listaVendasNove);
-		assertNotNull(listaVendasNove.getKey());
-		assertNotNull(listaVendasNove.getLinks());
-		assertTrue(listaVendasNove.toString().contains("links: [</api/vendas/9>;rel=\"self\"]"));
-		assertTrue(listaVendasNove.getCliente().toString().contains("links: [</api/cliente/9>;rel=\"self\"]"));
-		
-		assertNotNull(listaVendasNove.getCliente());
-		assertNotNull(listaVendasNove.getCondicaoPagamento());
-		assertNotNull(listaVendasNove.getDataVenda());
-		assertEquals(9.0, listaVendasNove.getValorTotal());
-	}*/
 
 	@Test
 	void testCreate() {

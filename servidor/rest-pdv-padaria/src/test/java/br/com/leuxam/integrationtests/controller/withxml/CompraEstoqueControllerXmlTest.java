@@ -233,6 +233,54 @@ public class CompraEstoqueControllerXmlTest extends AbstractIntegrationTest{
 					.statusCode(204);
 
 	}
+	
+
+	@Test
+	@Order(6)
+	public void testFindByIdComprasHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specificationFindById)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.queryParam("id", compraEstoque.getCompras().getId())
+					.queryParam("table", "compras")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/compra-de-produtos/relatorio?id=1&amp;table=compras&amp;page=0&amp;size=12&amp;direction=asc</href></links>"));
+		assertTrue(content.contains("<page><size>12</size><totalElements>2</totalElements><totalPages>1</totalPages><number>0</number></page>"));
+	}
+	
+	@Test
+	@Order(7)
+	public void testFindByIdProdutoHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specificationFindById)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.queryParam("id", compraEstoque.getEstoque().getId())
+					.queryParam("table", "produto")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/compra-de-produtos/relatorio?id=1&amp;table=produto&amp;page=0&amp;size=12&amp;direction=asc</href></links>"));
+		assertTrue(content.contains("<page><size>12</size><totalElements>0</totalElements><totalPages>0</totalPages><number>0</number></page>"));
+		
+	}
 	private void mockCompraEstoque() {
 		ComprasVO compras = new ComprasVO(1L, null, null);
 		EstoqueVO estoque = new EstoqueVO(1L, null, null, null, null, null);

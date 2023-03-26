@@ -51,43 +51,7 @@ class VendasEstoqueServiceTest {
 		input = new MockVendaEstoque();
 		MockitoAnnotations.openMocks(this);
 	}
-/*
-	@Test
-	void testFindAll() {
-		List<VendaEstoque> list = input.mockEntityList();
-		
-		when(repository.findAll()).thenReturn(list);
-		
-		var vendasEstoque = service.findAll();
-		
-		assertNotNull(vendasEstoque);
-		assertEquals(14, vendasEstoque.size());
-		
-		var vendaEstoqueUm = vendasEstoque.get(1);
-		
-		assertNotNull(vendaEstoqueUm);
-		assertNotNull(vendaEstoqueUm.getEstoque().getKey());
-		assertNotNull(vendaEstoqueUm.getVendas().getKey());
-		assertEquals(1.0, vendaEstoqueUm.getPreco());
-		assertEquals(1.0, vendaEstoqueUm.getQuantidade());
-		
-		var vendaEstoqueCinco = vendasEstoque.get(5);
-		
-		assertNotNull(vendaEstoqueCinco);
-		assertNotNull(vendaEstoqueCinco.getEstoque().getKey());
-		assertNotNull(vendaEstoqueCinco.getVendas().getKey());
-		assertEquals(5.0, vendaEstoqueCinco.getPreco());
-		assertEquals(5.0, vendaEstoqueCinco.getQuantidade());
-		
-		var vendaEstoqueNove = vendasEstoque.get(9);
-		
-		assertNotNull(vendaEstoqueNove);
-		assertNotNull(vendaEstoqueNove.getEstoque().getKey());
-		assertNotNull(vendaEstoqueNove.getVendas().getKey());
-		assertEquals(9.0, vendaEstoqueNove.getPreco());
-		assertEquals(9.0, vendaEstoqueNove.getQuantidade());
-	}
-	*/
+
 	@Test
 	void testCreate() {
 		
@@ -131,78 +95,7 @@ class VendasEstoqueServiceTest {
 		
 		assertTrue(actualMessage.contains(expectedMessage));
 	}
-/*
-	@Test
-	void testFindAllWithProdutcs() {
-		List<VendaEstoque> list = input.mockEntityListForProdutos();
-		
-		when(repository.findAllWithProducts(1L)).thenReturn(list);
-		var vendaEstoqueByProdutos = service.findAllWithProdutcs(1L);
-		
-		assertNotNull(vendaEstoqueByProdutos);
-		assertEquals(14, vendaEstoqueByProdutos.size());
-		
-		var vendaEstoqueByProdutosUm = vendaEstoqueByProdutos.get(1);
-		
-		assertNotNull(vendaEstoqueByProdutosUm);
-		assertNotNull(vendaEstoqueByProdutosUm.getEstoque().getKey());
-		assertNotNull(vendaEstoqueByProdutosUm.getVendas().getKey());
-		assertEquals(1.0, vendaEstoqueByProdutosUm.getPreco());
-		assertEquals(1.0, vendaEstoqueByProdutosUm.getQuantidade());
-		
-		var vendaEstoqueByProdutosCinco = vendaEstoqueByProdutos.get(5);
-		
-		assertNotNull(vendaEstoqueByProdutosCinco);
-		assertNotNull(vendaEstoqueByProdutosCinco.getEstoque().getKey());
-		assertNotNull(vendaEstoqueByProdutosCinco.getVendas().getKey());
-		assertEquals(5.0, vendaEstoqueByProdutosCinco.getPreco());
-		assertEquals(5.0, vendaEstoqueByProdutosCinco.getQuantidade());
-		
-		var vendaEstoqueByProdutosNove = vendaEstoqueByProdutos.get(9);
-		
-		assertNotNull(vendaEstoqueByProdutosNove);
-		assertNotNull(vendaEstoqueByProdutosNove.getEstoque().getKey());
-		assertNotNull(vendaEstoqueByProdutosNove.getVendas().getKey());
-		assertEquals(9.0, vendaEstoqueByProdutosNove.getPreco());
-		assertEquals(9.0, vendaEstoqueByProdutosNove.getQuantidade());
-	}
 
-	@Test
-	void testFindAllWithVendas() {
-		
-		List<VendaEstoque> list = input.mockEntityListForVendas();
-		
-		when(repository.findAllWithVendas(1L)).thenReturn(list);
-		var vendaEstoqueByVendas = service.findAllWithVendas(1L);
-		
-		assertNotNull(vendaEstoqueByVendas);
-		assertEquals(14, vendaEstoqueByVendas.size());
-		
-		var vendaEstoqueByVendasUm = vendaEstoqueByVendas.get(1);
-		
-		assertNotNull(vendaEstoqueByVendasUm);
-		assertNotNull(vendaEstoqueByVendasUm.getEstoque().getKey());
-		assertNotNull(vendaEstoqueByVendasUm.getVendas().getKey());
-		assertEquals(1.0, vendaEstoqueByVendasUm.getPreco());
-		assertEquals(1.0, vendaEstoqueByVendasUm.getQuantidade());
-		
-		var vendaEstoqueByVendasCinco = vendaEstoqueByVendas.get(5);
-		
-		assertNotNull(vendaEstoqueByVendasCinco);
-		assertNotNull(vendaEstoqueByVendasCinco.getEstoque().getKey());
-		assertNotNull(vendaEstoqueByVendasCinco.getVendas().getKey());
-		assertEquals(5.0, vendaEstoqueByVendasCinco.getPreco());
-		assertEquals(5.0, vendaEstoqueByVendasCinco.getQuantidade());
-		
-		var vendaEstoqueByVendasNove = vendaEstoqueByVendas.get(9);
-		
-		assertNotNull(vendaEstoqueByVendasNove);
-		assertNotNull(vendaEstoqueByVendasNove.getEstoque().getKey());
-		assertNotNull(vendaEstoqueByVendasNove.getVendas().getKey());
-		assertEquals(9.0, vendaEstoqueByVendasNove.getPreco());
-		assertEquals(9.0, vendaEstoqueByVendasNove.getQuantidade());
-	}
-*/
 	@Test
 	void testUpdateByIdProductAndVendas() {
 		VendaEstoque entity = input.mockEntity(1);

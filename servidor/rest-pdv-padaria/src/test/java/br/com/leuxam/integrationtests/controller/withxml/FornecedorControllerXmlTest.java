@@ -231,7 +231,35 @@ public class FornecedorControllerXmlTest extends AbstractIntegrationTest{
 		assertEquals("Blogpad", fornecedorSete.getRazaoSocial());
 		assertEquals("71-60771-5128", fornecedorSete.getTelefone());
 	}
-	
+
+	@Test
+	@Order(6)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		assertTrue(content.contains("<links><rel>first</rel><href>http://localhost:8888/api/fornecedor?direction=asc&amp;page=0&amp;size=12&amp;sort=razaoSocial,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/fornecedor?page=0&amp;size=12&amp;direction=asc</href></links>"));
+		assertTrue(content.contains("<links><rel>next</rel><href>http://localhost:8888/api/fornecedor?direction=asc&amp;page=1&amp;size=12&amp;sort=razaoSocial,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>last</rel><href>http://localhost:8888/api/fornecedor?direction=asc&amp;page=8&amp;size=12&amp;sort=razaoSocial,asc</href></links>"));
+		
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/fornecedor/99</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/fornecedor/100</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/fornecedor/82</href></links>"));
+		
+		assertTrue(content.contains("<page><size>12</size><totalElements>100</totalElements><totalPages>9</totalPages><number>0</number></page>"));
+	}
 	private void mockFornecedor() {
 		fornecedor.setCnpj("05.729.768/0001-80");
 		fornecedor.setNomeDoContato("Maxuel Vieira Tobá Junior");

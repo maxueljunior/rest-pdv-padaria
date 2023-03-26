@@ -239,6 +239,40 @@ public class FornecedorControllerYamlTest extends AbstractIntegrationTest{
 		assertEquals("71-60771-5128", fornecedorSete.getTelefone());
 	}
 	
+
+	@Test
+	@Order(6)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var unthreatedcontent = given().spec(specification)
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		var content = unthreatedcontent.replace("\n", "").replace("\r", "");
+		
+		assertTrue(content.contains("rel: \"first\"  href: \"http://localhost:8888/api/fornecedor?direction=asc&page=0&size=12&sort=razaoSocial,asc\""));
+		assertTrue(content.contains("rel: \"self\"  href: \"http://localhost:8888/api/fornecedor?page=0&size=12&direction=asc\""));
+		assertTrue(content.contains("rel: \"next\"  href: \"http://localhost:8888/api/fornecedor?direction=asc&page=1&size=12&sort=razaoSocial,asc\""));
+		assertTrue(content.contains("rel: \"last\"  href: \"http://localhost:8888/api/fornecedor?direction=asc&page=8&size=12&sort=razaoSocial,asc\""));
+		
+		assertTrue(content.contains("rel: \"self\"    href: \"http://localhost:8888/api/fornecedor/36\""));
+		assertTrue(content.contains("rel: \"self\"    href: \"http://localhost:8888/api/fornecedor/16\""));
+		assertTrue(content.contains("rel: \"self\"    href: \"http://localhost:8888/api/fornecedor/10\""));
+		
+		assertTrue(content.contains("page:  size: 12  totalElements: 100  totalPages: 9  number: 0"));
+		
+	}
+	
 	private void mockFornecedor() {
 		fornecedor.setCnpj("05.729.768/0001-80");
 		fornecedor.setNomeDoContato("Maxuel Vieira Tobá Junior");

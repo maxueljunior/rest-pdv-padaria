@@ -225,6 +225,30 @@ public class VendasControllerXmlTest extends AbstractIntegrationTest{
 		assertEquals(150.0, vendasDois.getValorTotal());
 	}
 	
+	@Test
+	@Order(6)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/vendas?page=0&amp;size=12&amp;direction=asc</href></links>"));
+		
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/cliente/3</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/vendas/1</href></links>"));
+		
+		assertTrue(content.contains("<page><size>12</size><totalElements>2</totalElements><totalPages>1</totalPages><number>0</number></page>"));
+	}
 	private void mockVendas() {
 		ClienteVO cliente = new ClienteVO(1L, null, null, null, null, null, null, null);
 		vendas.setCliente(cliente);

@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -47,106 +45,6 @@ class CompraEstoqueServiceTest {
 		input = new MockCompraEstoque();
 		MockitoAnnotations.openMocks(this);
 	}
-	/*
-	@Test
-	void testFindAllWithProduto() {
-		List<CompraEstoque> list = input.mockEntityListForProducts();
-		
-		when(repository.findAllWithProduto(1L)).thenReturn(list);
-		
-		var compraProdutos = service.findAllWithProduto(1L);
-		assertNotNull(compraProdutos);
-		assertEquals(14, compraProdutos.size());
-		
-		var compraProdutoUm = compraProdutos.get(1);
-		
-		assertNotNull(compraProdutoUm.getCompras().getKey());
-		assertNotNull(compraProdutoUm.getEstoque().getKey());
-		assertEquals(1.0, compraProdutoUm.getPreco());
-		assertEquals(1.0, compraProdutoUm.getQuantidade());
-		
-		var compraProdutoCinco = compraProdutos.get(5);
-		
-		assertNotNull(compraProdutoCinco.getCompras().getKey());
-		assertNotNull(compraProdutoCinco.getEstoque().getKey());
-		assertEquals(5.0, compraProdutoCinco.getPreco());
-		assertEquals(5.0, compraProdutoCinco.getQuantidade());
-		
-		var compraProdutoNove = compraProdutos.get(9);
-		
-		assertNotNull(compraProdutoNove.getCompras().getKey());
-		assertNotNull(compraProdutoNove.getEstoque().getKey());
-		assertEquals(9.0, compraProdutoNove.getPreco());
-		assertEquals(9.0, compraProdutoNove.getQuantidade());
-		
-	}
-
-	@Test
-	void testFindAllWithCompra() {
-		
-		List<CompraEstoque> list = input.mockEntityListForOrders();
-		
-		when(repository.findAllWithCompras(1L)).thenReturn(list);
-		
-		var compraProdutos = service.findAllWithCompra(1L);
-		assertNotNull(compraProdutos);
-		assertEquals(14, compraProdutos.size());
-		
-		var compraProdutoUm = compraProdutos.get(1);
-		
-		assertNotNull(compraProdutoUm.getCompras().getKey());
-		assertNotNull(compraProdutoUm.getEstoque().getKey());
-		assertEquals(1.0, compraProdutoUm.getPreco());
-		assertEquals(1.0, compraProdutoUm.getQuantidade());
-		
-		var compraProdutoCinco = compraProdutos.get(5);
-		
-		assertNotNull(compraProdutoCinco.getCompras().getKey());
-		assertNotNull(compraProdutoCinco.getEstoque().getKey());
-		assertEquals(5.0, compraProdutoCinco.getPreco());
-		assertEquals(5.0, compraProdutoCinco.getQuantidade());
-		
-		var compraProdutoNove = compraProdutos.get(9);
-		
-		assertNotNull(compraProdutoNove.getCompras().getKey());
-		assertNotNull(compraProdutoNove.getEstoque().getKey());
-		assertEquals(9.0, compraProdutoNove.getPreco());
-		assertEquals(9.0, compraProdutoNove.getQuantidade());
-	}*/
-	/*
-	@Test
-	void testFindAll() {
-		
-		List<CompraEstoque> list = input.mockEntityList();
-		
-		when(repository.findAll()).thenReturn(list);
-		
-		var compraProdutos = service.findAll();
-		assertNotNull(compraProdutos);
-		assertEquals(14, compraProdutos.size());
-		
-		var compraProdutoUm = compraProdutos.get(1);
-		
-		assertNotNull(compraProdutoUm.getCompras().getKey());
-		assertNotNull(compraProdutoUm.getEstoque().getKey());
-		assertEquals(1.0, compraProdutoUm.getPreco());
-		assertEquals(1.0, compraProdutoUm.getQuantidade());
-		
-		var compraProdutoCinco = compraProdutos.get(5);
-		
-		assertNotNull(compraProdutoCinco.getCompras().getKey());
-		assertNotNull(compraProdutoCinco.getEstoque().getKey());
-		assertEquals(5.0, compraProdutoCinco.getPreco());
-		assertEquals(5.0, compraProdutoCinco.getQuantidade());
-		
-		var compraProdutoNove = compraProdutos.get(9);
-		
-		assertNotNull(compraProdutoNove.getCompras().getKey());
-		assertNotNull(compraProdutoNove.getEstoque().getKey());
-		assertEquals(9.0, compraProdutoNove.getPreco());
-		assertEquals(9.0, compraProdutoNove.getQuantidade());
-	}
-*/
 	@Test
 	void testCreate() {
 		CompraEstoque entity = input.mockEntity(1);

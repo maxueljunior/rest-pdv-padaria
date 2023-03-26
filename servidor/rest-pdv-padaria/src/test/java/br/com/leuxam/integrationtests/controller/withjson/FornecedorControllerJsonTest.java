@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -224,6 +221,36 @@ public class FornecedorControllerJsonTest extends AbstractIntegrationTest{
 		assertEquals("Wynn Heymes", fornecedorSete.getNomeDoContato());
 		assertEquals("Blogpad", fornecedorSete.getRazaoSocial());
 		assertEquals("71-60771-5128", fornecedorSete.getTelefone());
+	}
+	
+
+	@Test
+	@Order(6)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/fornecedor/99\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/fornecedor/100\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/fornecedor/82\"}}}"));
+		
+		assertTrue(content.contains("\"first\":{\"href\":\"http://localhost:8888/api/fornecedor?direction=asc&page=0&size=12&sort=razaoSocial,asc\"}"));
+		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/api/fornecedor?page=0&size=12&direction=asc\"}"));
+		assertTrue(content.contains("\"next\":{\"href\":\"http://localhost:8888/api/fornecedor?direction=asc&page=1&size=12&sort=razaoSocial,asc\"}"));
+		assertTrue(content.contains("\"last\":{\"href\":\"http://localhost:8888/api/fornecedor?direction=asc&page=8&size=12&sort=razaoSocial,asc\"}}"));		
+		
+		assertTrue(content.contains("\"page\":{\"size\":12,\"totalElements\":100,\"totalPages\":9,\"number\":0}}"));
+		
 	}
 	
 	private void mockFornecedor() {

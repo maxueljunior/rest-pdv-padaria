@@ -37,7 +37,7 @@ class ComprasServiceTest {
 	
 	@Mock
 	ComprasRepository repository;
-
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		input = new MockCompras();
@@ -62,54 +62,7 @@ class ComprasServiceTest {
 		assertEquals(1L, result.getFornecedor().getKey());
 		assertEquals(1.0, result.getValorTotal());
 	}
-/*
-	@Test
-	void testFindAll() {
-		List<Compras> list = input.mockEntityList();
-		
-		when(repository.findAll()).thenReturn(list);
-		
-		var compras = service.findAll();
-		assertNotNull(compras);
-		assertEquals(14, compras.size());
-		
-		var compraUm = compras.get(1);
-		
-		assertNotNull(compraUm);
-		assertNotNull(compraUm.getKey());
-		assertNotNull(compraUm.getLinks());
-		assertNotNull(compraUm.getFornecedor().getLinks());
-		assertTrue(compraUm.toString().contains("links: [</api/compras/1>;rel=\"self\"]"));
-		assertTrue(compraUm.getFornecedor().toString().contains("links: [</api/fornecedor/1>;rel=\"self\"]"));
-		
-		assertEquals(1L, compraUm.getFornecedor().getKey());
-		assertEquals(1.0, compraUm.getValorTotal());
-		
-		var compraCinco = compras.get(5);
-		
-		assertNotNull(compraCinco);
-		assertNotNull(compraCinco.getKey());
-		assertNotNull(compraCinco.getLinks());
-		assertNotNull(compraCinco.getFornecedor().getLinks());
-		assertTrue(compraCinco.toString().contains("links: [</api/compras/5>;rel=\"self\"]"));
-		assertTrue(compraCinco.getFornecedor().toString().contains("links: [</api/fornecedor/5>;rel=\"self\"]"));
-		
-		assertEquals(5L, compraCinco.getFornecedor().getKey());
-		assertEquals(5.0, compraCinco.getValorTotal());
-		
-		var compraNove = compras.get(9);
-		
-		assertNotNull(compraNove);
-		assertNotNull(compraNove.getKey());
-		assertNotNull(compraNove.getLinks());
-		assertNotNull(compraNove.getFornecedor().getLinks());
-		assertTrue(compraNove.toString().contains("links: [</api/compras/9>;rel=\"self\"]"));
-		assertTrue(compraNove.getFornecedor().toString().contains("links: [</api/fornecedor/9>;rel=\"self\"]"));
-		
-		assertEquals(9L, compraNove.getFornecedor().getKey());
-		assertEquals(9.0, compraNove.getValorTotal());
-	}*/
-
+	
 	@Test
 	void testCreate() {
 		Compras entity = input.mockEntity(1);

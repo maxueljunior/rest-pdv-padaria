@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -66,60 +65,6 @@ class ClienteServicesTest {
 		assertEquals("Telefone1", result.getTelefone());
 	}
 	
-	/*
-	@Test
-	void testFindAll() {
-		List<Cliente> list = input.mockEntityList();
-		
-		when(repository.findAll()).thenReturn(list);
-		
-		var cliente = service.findAll();
-		assertNotNull(cliente);
-		assertEquals(14, cliente.size());
-		
-		var clienteUm = cliente.get(1);
-		
-		assertNotNull(clienteUm.getKey());
-		assertNotNull(clienteUm.getLinks());
-		assertTrue(clienteUm.toString().contains("links: [</api/cliente/1>;rel=\"self\"]"));
-		
-		assertNotNull(clienteUm.getDataNascimento());
-		assertEquals("Endereço1", clienteUm.getEndereco());
-		assertEquals(1.0, clienteUm.getLucratividade());
-		assertEquals("Nome1", clienteUm.getNome());
-		assertEquals("F", clienteUm.getSexo());
-		assertEquals("Sobrenome1", clienteUm.getSobrenome());
-		assertEquals("Telefone1", clienteUm.getTelefone());
-		
-		var clienteCinco = cliente.get(5);
-		
-		assertNotNull(clienteCinco.getKey());
-		assertNotNull(clienteCinco.getLinks());
-		assertTrue(clienteCinco.toString().contains("links: [</api/cliente/5>;rel=\"self\"]"));
-		
-		assertNotNull(clienteCinco.getDataNascimento());
-		assertEquals("Endereço5", clienteCinco.getEndereco());
-		assertEquals(5.0, clienteCinco.getLucratividade());
-		assertEquals("Nome5", clienteCinco.getNome());
-		assertEquals("F", clienteCinco.getSexo());
-		assertEquals("Sobrenome5", clienteCinco.getSobrenome());
-		assertEquals("Telefone5", clienteCinco.getTelefone());
-		
-		var clienteOito = cliente.get(8);
-		
-		assertNotNull(clienteOito.getKey());
-		assertNotNull(clienteOito.getLinks());
-		assertTrue(clienteOito.toString().contains("links: [</api/cliente/8>;rel=\"self\"]"));
-		
-		assertNotNull(clienteOito.getDataNascimento());
-		assertEquals("Endereço8", clienteOito.getEndereco());
-		assertEquals(8.0, clienteOito.getLucratividade());
-		assertEquals("Nome8", clienteOito.getNome());
-		assertEquals("M", clienteOito.getSexo());
-		assertEquals("Sobrenome8", clienteOito.getSobrenome());
-		assertEquals("Telefone8", clienteOito.getTelefone());
-	}*/
-
 	@Test
 	void testCreate() {
 		Cliente entity = input.mockEntity(1);

@@ -248,6 +248,57 @@ public class VendaEstoqueControllerYamlTest extends AbstractIntegrationTest{
 
 	}
 
+	@Test
+	@Order(6)
+	public void testFindByIdProdutoHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var unthreatedcontent = given().spec(specificationFindById)
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.queryParam("id", vendaEstoque.getEstoque().getId())
+					.queryParam("table", "produto")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		var content = unthreatedcontent.replace("\n","").replace("\r","");
+		
+		assertTrue(content.contains("rel: \"self\"  href: \"http://localhost:8888/api/venda-de-produtos/relatorio?id=1&table=produto&page=0&size=12&direction=asc\""));
+		assertTrue(content.contains("page:  size: 12  totalElements: 0  totalPages: 0  number: 0"));
+	}
+	
+	@Test
+	@Order(7)
+	public void testFindByIdVendasHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var unthreatedcontent = given().spec(specificationFindById)
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.queryParam("id", vendaEstoque.getEstoque().getId())
+					.queryParam("table", "vendas")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		var content = unthreatedcontent.replace("\n","").replace("\r","");
+
+		assertTrue(content.contains("rel: \"self\"  href: \"http://localhost:8888/api/venda-de-produtos/relatorio?id=1&table=vendas&page=0&size=12&direction=asc\""));
+		assertTrue(content.contains("page:  size: 12  totalElements: 6  totalPages: 1  number: 0"));
+	}
 	private void mockVendaEstoque() {
 		EstoqueVO estoque = new EstoqueVO(1L, null, null, null, null, null);
 		vendaEstoque.setEstoque(estoque);

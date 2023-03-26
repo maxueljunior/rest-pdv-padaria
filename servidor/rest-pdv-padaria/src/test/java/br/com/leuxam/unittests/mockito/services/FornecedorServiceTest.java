@@ -62,54 +62,6 @@ class FornecedorServiceTest {
 		assertEquals("Razao1", result.getRazaoSocial());
 		assertEquals("Telefone1", result.getTelefone());
 	}
-/*
-	@Test
-	void testFindAll() {
-		List<Fornecedor> list = input.mockEntityList();
-		
-		when(repository.findAll()).thenReturn(list);
-		var fornecedores = service.findAll();
-		
-		assertNotNull(fornecedores);
-		assertEquals(14, fornecedores.size());
-		
-		var fornecedorUm = fornecedores.get(1);
-		
-		assertNotNull(fornecedorUm);
-		assertNotNull(fornecedorUm.getKey());
-		assertNotNull(fornecedorUm.getLinks());
-		assertTrue(fornecedorUm.toString().contains("links: [</api/fornecedor/1>;rel=\"self\"]"));
-		
-		assertEquals("CNPJ1", fornecedorUm.getCnpj());
-		assertEquals("Contato1", fornecedorUm.getNomeDoContato());
-		assertEquals("Razao1", fornecedorUm.getRazaoSocial());
-		assertEquals("Telefone1", fornecedorUm.getTelefone());		
-		
-		var fornecedorCinco = fornecedores.get(5);
-		
-		assertNotNull(fornecedorCinco);
-		assertNotNull(fornecedorCinco.getKey());
-		assertNotNull(fornecedorCinco.getLinks());
-		assertTrue(fornecedorCinco.toString().contains("links: [</api/fornecedor/5>;rel=\"self\"]"));
-		
-		assertEquals("CNPJ5", fornecedorCinco.getCnpj());
-		assertEquals("Contato5", fornecedorCinco.getNomeDoContato());
-		assertEquals("Razao5", fornecedorCinco.getRazaoSocial());
-		assertEquals("Telefone5", fornecedorCinco.getTelefone());		
-		
-		var fornecedorNove = fornecedores.get(9);
-		
-		assertNotNull(fornecedorNove);
-		assertNotNull(fornecedorNove.getKey());
-		assertNotNull(fornecedorNove.getLinks());
-		assertTrue(fornecedorNove.toString().contains("links: [</api/fornecedor/9>;rel=\"self\"]"));
-		
-		assertEquals("CNPJ9", fornecedorNove.getCnpj());
-		assertEquals("Contato9", fornecedorNove.getNomeDoContato());
-		assertEquals("Razao9", fornecedorNove.getRazaoSocial());
-		assertEquals("Telefone9", fornecedorNove.getTelefone());
-	}
-*/
 	@Test
 	void testCreate() {
 		Fornecedor entity = input.mockEntity(1);

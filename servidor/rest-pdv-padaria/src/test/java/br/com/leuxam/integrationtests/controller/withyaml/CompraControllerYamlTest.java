@@ -227,7 +227,7 @@ public class CompraControllerYamlTest extends AbstractIntegrationTest{
 	}
 	
 	@Test
-	@Order(5)
+	@Order(6)
 	public void testFindAllWithNotAuthorized() throws JsonMappingException, JsonProcessingException {
 		
 		RequestSpecification specificationWithNotAuthorized = new RequestSpecBuilder()
@@ -246,6 +246,34 @@ public class CompraControllerYamlTest extends AbstractIntegrationTest{
 					.get()
 				.then()
 					.statusCode(403);
+	}
+	
+	@Test
+	@Order(7)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var unthreteadcontent = given().spec(specification)
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		var content = unthreteadcontent.replace("\n", "").replace("\r", "");
+		
+		assertTrue(content.contains("rel: \"self\"  href: \"http://localhost:8888/api/compras?page=0&size=12&direction=asc\""));
+		
+		assertTrue(content.contains("links:  - rel: \"self\"    href: \"http://localhost:8888/api/compras/1\""));
+		assertTrue(content.contains("links:  - rel: \"self\"    href: \"http://localhost:8888/api/compras/2\""));
+		
+		assertTrue(content.contains("page:  size: 12  totalElements: 2  totalPages: 1  number: 0"));
 	}
 	
 	private void mockCompras() {

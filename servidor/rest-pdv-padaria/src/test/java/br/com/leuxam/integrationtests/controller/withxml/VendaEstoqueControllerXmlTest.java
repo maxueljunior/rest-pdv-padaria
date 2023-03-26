@@ -239,6 +239,51 @@ public class VendaEstoqueControllerXmlTest extends AbstractIntegrationTest{
 
 	}
 
+	@Test
+	@Order(6)
+	public void testFindByIdProdutoHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specificationFindById)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.queryParam("id", vendaEstoque.getEstoque().getId())
+					.queryParam("table", "produto")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/venda-de-produtos/relatorio?id=1&amp;table=produto&amp;page=0&amp;size=12&amp;direction=asc</href></links>"));
+		assertTrue(content.contains("<page><size>12</size><totalElements>0</totalElements><totalPages>0</totalPages><number>0</number></page>"));
+	}
+	
+	@Test
+	@Order(7)
+	public void testFindByIdVendasHATEOAS() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specificationFindById)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+					.queryParam("id", vendaEstoque.getEstoque().getId())
+					.queryParam("table", "vendas")
+					.queryParams("page", 0, "size", 12, "direction", "asc")
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/venda-de-produtos/relatorio?id=1&amp;table=vendas&amp;page=0&amp;size=12&amp;direction=asc</href></links>"));
+		assertTrue(content.contains("page><size>12</size><totalElements>6</totalElements><totalPages>1</totalPages><number>0</number></page>"));
+	}
 	private void mockVendaEstoque() {
 		EstoqueVO estoque = new EstoqueVO(1L, null, null, null, null, null);
 		vendaEstoque.setEstoque(estoque);

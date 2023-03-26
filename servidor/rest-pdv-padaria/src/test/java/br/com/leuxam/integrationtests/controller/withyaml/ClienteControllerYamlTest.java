@@ -262,7 +262,7 @@ public class ClienteControllerYamlTest extends AbstractIntegrationTest{
 	@Order(6)
 	public void testFindAllWithNotAuthorized() throws JsonProcessingException{
 		
-		RequestSpecification specificationWithNotAuthorized = specification = new RequestSpecBuilder()
+		RequestSpecification specificationWithNotAuthorized = new RequestSpecBuilder()
 				.setBasePath("/api/cliente")
 				.setPort(TestConfigs.SERVER_PORT)
 					.addFilter(new RequestLoggingFilter(LogDetail.ALL))
@@ -280,6 +280,38 @@ public class ClienteControllerYamlTest extends AbstractIntegrationTest{
 					.statusCode(403);
 	}
 	
+
+	@Test
+	@Order(7)
+	public void testHATEOAS() throws JsonProcessingException{
+		
+		var unthreatedcontent = given().spec(specification)
+				.config(RestAssuredConfig.config().encoderConfig(EncoderConfig.encoderConfig().encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.queryParams("page", 0, "size", 12, "direction", "asc")
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+				.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		var content = unthreatedcontent.replace("\n", "").replace("\r", "");
+		
+		assertTrue(content.contains("rel: \"first\"  href: \"http://localhost:8888/api/cliente?direction=asc&page=0&size=12&sort=nome,asc\""));
+		assertTrue(content.contains("rel: \"self\"  href: \"http://localhost:8888/api/cliente?page=0&size=12&direction=asc\""));
+		assertTrue(content.contains("rel: \"next\"  href: \"http://localhost:8888/api/cliente?direction=asc&page=1&size=12&sort=nome,asc\""));
+		assertTrue(content.contains("rel: \"last\"  href: \"http://localhost:8888/api/cliente?direction=asc&page=8&size=12&sort=nome,asc\""));
+		
+		assertTrue(content.contains("links:  - rel: \"self\"    href: \"http://localhost:8888/api/cliente/33\""));
+		assertTrue(content.contains("links:  - rel: \"self\"    href: \"http://localhost:8888/api/cliente/17\""));
+		assertTrue(content.contains("links:  - rel: \"self\"    href: \"http://localhost:8888/api/cliente/78\""));
+		
+		assertTrue(content.contains("page:  size: 12  totalElements: 100  totalPages: 9  number: 0"));
+	}
 	private void mockCliente() {
 		cliente.setDataNascimento(new Date());
 		cliente.setEndereco("Rua Silvio Jose Sarti");

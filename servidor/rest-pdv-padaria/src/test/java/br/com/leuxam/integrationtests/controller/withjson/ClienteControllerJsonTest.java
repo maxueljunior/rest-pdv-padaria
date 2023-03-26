@@ -253,7 +253,7 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 	@Order(6)
 	public void testFindAllWithNotAuthorized() throws JsonProcessingException{
 		
-		RequestSpecification specificationWithNotAuthorized = specification = new RequestSpecBuilder()
+		RequestSpecification specificationWithNotAuthorized = new RequestSpecBuilder()
 				.setBasePath("/api/cliente")
 				.setPort(TestConfigs.SERVER_PORT)
 					.addFilter(new RequestLoggingFilter(LogDetail.ALL))
@@ -270,6 +270,35 @@ public class ClienteControllerJsonTest extends AbstractIntegrationTest{
 				.extract()
 					.body()
 						.asString();
+	}
+	
+	@Test
+	@Order(7)
+	public void testHateoas() throws JsonProcessingException{
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.queryParams("page", 0, "size", 12, "direction","asc")
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+				.when()
+					.get()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/cliente/51\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/cliente/58\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/cliente/78\"}}}"));
+		
+		assertTrue(content.contains("\"first\":{\"href\":\"http://localhost:8888/api/cliente?direction=asc&page=0&size=12&sort=nome,asc\"}"));
+		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/api/cliente?page=0&size=12&direction=asc\"}"));
+		assertTrue(content.contains("\"next\":{\"href\":\"http://localhost:8888/api/cliente?direction=asc&page=1&size=12&sort=nome,asc\"}"));
+		assertTrue(content.contains("\"last\":{\"href\":\"http://localhost:8888/api/cliente?direction=asc&page=8&size=12&sort=nome,asc\"}"));
+		
+		assertTrue(content.contains("\"page\":{\"size\":12,\"totalElements\":100,\"totalPages\":9,\"number\":0}}"));
+		
 	}
 	
 	private void mockCliente() {
