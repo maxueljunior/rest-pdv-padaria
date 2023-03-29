@@ -9,7 +9,7 @@ export default function Cliente(){
     return(
         <div className="cliente-container">
             <header>
-                <img src={emporio} alt="Emporio"/>
+                {/* <img src={emporio} alt="Emporio"/> */}
                 <span><strong>Maxuel</strong></span>
                 <span>Pagina de Clientes</span>
                 <Link className="button" to="/cliente/novo">Adicionar novo Cliente</Link>
@@ -19,7 +19,65 @@ export default function Cliente(){
             </header>
 
             <h1>Registro de Clientes</h1>
-            <ul>
+            
+            <table>
+                <tr>
+                    <th>Nome</th>
+                    <th>Sobrenome</th>
+                    <th>Telefone</th>
+                    <th>Data de Nascimento</th>
+                    <th>Endereço</th>
+                    <th>Sexo</th>
+                    <th>Lucratividade</th>
+                </tr>
+                <tr>
+                    <td>Maxuel</td>
+                    <td>Junior</td>
+                    <td>(16)99232-6161</td>
+                    <td>17/01/1999</td>
+                    <td>Rua Horacilio Gomes Martins</td>
+                    <td>M</td>
+                    <td>53.0%</td>
+                </tr>
+                <tr>
+                    <td>Maxuel</td>
+                    <td>Junior</td>
+                    <td>(16)99232-6161</td>
+                    <td>17/01/1999</td>
+                    <td>Rua Horacilio Gomes Martins</td>
+                    <td>M</td>
+                    <td>53.0%</td>
+                </tr>
+                <tr>
+                    <td>Maxuel</td>
+                    <td>Junior</td>
+                    <td>(16)99232-6161</td>
+                    <td>17/01/1999</td>
+                    <td>Rua Horacilio Gomes Martins</td>
+                    <td>M</td>
+                    <td>53.0%</td>
+                </tr>
+                <tr>
+                    <td>Maxuel</td>
+                    <td>Junior</td>
+                    <td>(16)99232-6161</td>
+                    <td>17/01/1999</td>
+                    <td>Rua Horacilio Gomes Martins</td>
+                    <td>M</td>
+                    <td>53.0%</td>
+                </tr>
+                <tr>
+                    <td>Maxuel</td>
+                    <td>Junior</td>
+                    <td>(16)99232-6161</td>
+                    <td>17/01/1999</td>
+                    <td>Rua Horacilio Gomes Martins</td>
+                    <td>M</td>
+                    <td>53.0%</td>
+                </tr>
+            </table>
+        
+              {/* <ul>
                 <li>
                     <strong>Nome:</strong>
                     <p>Maxuel</p>
@@ -116,7 +174,7 @@ export default function Cliente(){
                         <FiTrash2 size={20} color="#251FC5"/>
                     </button>
                 </li>
-            </ul>
+            </ul> */}
         </div>
     );
 }
